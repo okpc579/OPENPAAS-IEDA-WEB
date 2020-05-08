@@ -26,6 +26,8 @@
     <result property="boshBpmRelease" column ="BOSH_BPM_RELEASE"/>
     <result property="boshUaaRelease" column ="BOSH_UAA_RELEASE"/>
     <result property="osConfRelease" column ="OS_CONF_RELEASE"/>
+    <result property="gardenRuncRelease" column ="GARDEN_RUNC_RELEASE"/>
+    <result property="boshVirtualBoxCpiRelease" column ="BOSH_VIRTUAL_BOX_CPI_RELEASE"/>
     <result property="boshCredhubRelease" column ="BOSH_CRED_HUB_RELEASE" />
     <result property="snapshotSchedule" column ="SNAPSHOT_SCHEDULE"/>
     <result property="enableSnapshots" column ="ENABLE_SNAPSHOTS"/>
@@ -96,6 +98,8 @@
         ,bootstrap.bosh_bpm_release as bosh_bpm_release
         ,bootstrap.bosh_uaa_release as bosh_uaa_release
         ,bootstrap.os_conf_release as os_conf_release
+        ,bootstrap.garden_runc_release as garden_runc_release
+        ,bootstrap.bosh_virtual_box_cpi_release as bosh_virtual_box_cpi_release
         ,bootstrap.bosh_cred_hub_release as bosh_cred_hub_release
         ,bootstrap.bosh_password as bosh_password
         ,bootstrap.bosh_release as bosh_release
@@ -140,6 +144,8 @@ Order by iaas_type asc, update_date asc
             ,bootstrap.bosh_bpm_release as bosh_bpm_release
             ,bootstrap.bosh_uaa_release as bosh_uaa_release
             ,bootstrap.os_conf_release as os_conf_release
+            ,bootstrap.garden_runc_release as garden_runc_release
+            ,bootstrap.bosh_virtual_box_cpi_release as bosh_virtual_box_cpi_release
             ,bootstrap.bosh_cred_hub_release as bosh_cred_hub_release
             ,bootstrap.bosh_password as bosh_password
             ,bootstrap.bosh_release as bosh_release
@@ -268,6 +274,8 @@ Order by iaas_type asc, update_date asc
         ,ntp= #{bootstrap.ntp}
         ,bosh_release = #{bootstrap.boshRelease}
         ,os_conf_release = #{bootstrap.osConfRelease}
+        ,garden_runc_release = #{bootstrap.gardenRuncRelease}
+        ,bosh_virtual_box_cpi_release = #{bootstrap.boshVirtualBoxCpiRelease}
         ,snapshot_schedule = #{bootstrap.snapshotSchedule}
         ,enable_snapshots = #{bootstrap.enableSnapshots}
         ,cloud_instance_type = #{bootstrap.cloudInstanceType}

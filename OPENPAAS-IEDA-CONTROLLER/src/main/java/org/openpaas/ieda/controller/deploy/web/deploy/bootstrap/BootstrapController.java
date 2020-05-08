@@ -120,6 +120,29 @@ public class BootstrapController extends BaseController {
 
     /***************************************************
      * @project : Paas 플랫폼 설치 자동화
+     * @description : 기본 정보 저장
+     * @title : saveWardenDefaultInfo
+     * @return : ResponseEntity<BootstrapVO>
+     ***************************************************/
+    @RequestMapping(value = "/deploy/bootstrap/install/setWardenDefaultInfo", method = RequestMethod.PUT)
+    public ResponseEntity<BootstrapVO> saveWardenDefaultInfo(@RequestBody BootStrapDeployDTO.Default dto, Principal principal) {
+        if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/bootstrap/install/setWardenDefaultInfo"); }
+        BootStrapDeployDTO.IaasConfig tempDTO = new BootStrapDeployDTO.IaasConfig();
+        tempDTO.setIaasType("WARDEN");
+        tempDTO.setIaasConfigId("1");
+        tempDTO.setId(dto.getId());
+        BootstrapVO vo = saveService.saveIaasConfigInfo(tempDTO, principal);
+        if(dto.getId() ==null)
+            dto.setId(Integer.toString(vo.getId()));
+        vo = saveService.saveDefaultInfo(dto, principal);
+        return new ResponseEntity<>(vo, HttpStatus.OK);
+    }
+
+
+
+
+    /***************************************************
+     * @project : Paas 플랫폼 설치 자동화
      * @description : 네트워크 정보 저장
      * @title : saveNetworkInfo
      * @return : ResponseEntity<BootstrapVO>

@@ -575,7 +575,7 @@ function getDirectorList(){
                     directorList += "<option value='"+directorArray[i].iedaDirectorConfigSeq+"/"+directorArray[i].directorCpi+"'>"+directorArray[i].directorName+"("+directorArray[i].directorUrl+")"+"</option>\n";
                 }
             }else{
-                directorList = "<option selected='selected' disabled='disabled' value='' style='color:red'>디렉터가 존재하지 않습니다.</option>";
+                directorList = "<option selected='selected' disabled='disabled' value='' style='color:#ff0000'>디렉터가 존재하지 않습니다.</option>";
             }
             directorList += "</select>"
             $object.html(directorList);

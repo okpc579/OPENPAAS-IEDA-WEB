@@ -63,6 +63,8 @@ public class BootStrapDeployDTO{
         private String osConfRelease;
         private String boshBpmRelease; //BOSH BPM 릴리즈
         private String boshUaaRelease; //BOSH uaa 릴리즈
+        private String gardenRuncRelease; //BOSH uaa 릴리즈
+        private String boshVirtualBoxCpiRelease; //BOSH uaa 릴리즈
         private String boshCredhubRelease; //BOSH Credhub 릴리즈
         private String paastaMonitoringAgentRelease; //PaaS-TA 모니터링 사용시 Agent 릴리즈
         private String paastaMonitoringSyslogRelease; //PaaS-TA 모니터링 사용시 Syslog 릴리즈
@@ -197,7 +199,22 @@ public class BootStrapDeployDTO{
         public void setSyslogTransport(String syslogTransport) {
             this.syslogTransport = syslogTransport;
         }
-        
+
+        public String getGardenRuncRelease() {
+            return gardenRuncRelease;
+        }
+
+        public void setGardenRuncRelease(String gardenRuncRelease) {
+            this.gardenRuncRelease = gardenRuncRelease;
+        }
+
+        public String getBoshVirtualBoxCpiRelease() {
+            return boshVirtualBoxCpiRelease;
+        }
+
+        public void setBoshVirtualBoxCpiRelease(String boshVirtualBoxCpiRelease) {
+            this.boshVirtualBoxCpiRelease = boshVirtualBoxCpiRelease;
+        }
     }
     
     public static class Network{

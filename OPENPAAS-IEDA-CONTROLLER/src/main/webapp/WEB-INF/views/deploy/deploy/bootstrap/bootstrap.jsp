@@ -216,6 +216,7 @@ function iaasSelectPopup() {
                     else if( iaas == "vSphere" ) vSpherePopup();
                     else if( iaas == "Google" ) googlePopup();
                     else if( iaas == "Azure") azurePopup();
+                    else if( iaas == "Warden") wardenPopup();
                  });       
              }else{
                  w2alert("BOOTSTRAP을 설치할 클라우드 환경을 선택하세요");
@@ -333,6 +334,7 @@ $( window ).resize(function() {
             <option value="vSphere">vSphere</option>
             <option value="Google">Google</option>
             <option value="Azure">Azure</option>
+            <option value="Warden">Warden</option>
         </select>
     </div>
 </div>

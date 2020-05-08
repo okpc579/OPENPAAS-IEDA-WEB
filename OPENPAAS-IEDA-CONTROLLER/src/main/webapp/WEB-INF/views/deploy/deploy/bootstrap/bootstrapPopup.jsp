@@ -84,6 +84,8 @@ function setBootstrapData(contents){
             boshCredhubRelease            : contents.boshCredhubRelease,
             boshUaaRelease                : contents.boshUaaRelease,
             osConfRelease                 : contents.osConfRelease,
+            gardenRuncRelease             : contents.gardenRuncRelease,
+            boshVirtualBoxCpiRelease      : contents.boshVirtualBoxCpiRelease,
             enableSnapshots               : contents.enableSnapshots,
             snapshotSchedule              : contents.snapshotSchedule,
             paastaMonitoringUse           : contents.paastaMonitoringUse,
@@ -122,6 +124,7 @@ function setBootstrapData(contents){
     else if( iaas == "vSphere" ) vSpherePopup();
     else if( iaas == "Google" ) googlePopup();
     else if( iaas == "Azure" ) azurePopup();
+    else if( iaas == "WARDEN" ) wardenPopup();
 }
 
 
@@ -246,6 +249,13 @@ function azurePopup(){
     }); 
 }
 
+/******************************************************************
+ * 기능 : wardenPopup
+ * 설명 : warden 정보 입력 팝업 화면
+ ***************************************************************** */
+function wardenPopup(){
+    defaultInfoPop('warden');
+}
 
 /********************************************************
  * 설명 : 인프라 환경 설정 별칭 목록 조회
@@ -398,6 +408,10 @@ function defaultInfoPop(iaas){
         buttons : $("#DefaultInfoButtonDiv").html(),
         onOpen:function(event){
             event.onComplete = function(){
+                if( iaas != 'warden' ){
+                    $(".w2ui-msg-body .gardenRuncDiv").hide();
+                    $(".w2ui-msg-body .boshVirtualBoxCpiDiv").hide();
+                }
                 $(".w2ui-msg-body input[name='paastaMonitoring']").attr("checked", false);
                 $(".w2ui-msg-body select[name=paastaMonitoringAgentRelease]").attr("disabled", true);
                 $(".w2ui-msg-body select[name=paastaMonitoringSyslogRelease]").attr("disabled", true);
@@ -464,6 +478,10 @@ function defaultInfoPop(iaas){
                 getLocalBoshList('bpm');
                 //BOSH OS-CONF 릴리즈 정보 가져오기
                 getLocalBoshList('os-conf');
+                //BOSH GARDEN-RUNC 릴리즈 정보 가져오기
+                getLocalBoshList('garden-runc');
+                //BOSH VIRTUAL BOX CPI 릴리즈 정보 가져오기
+                getLocalBoshList('bosh-virtualbox-cpi');
                 //BOSH credhub 릴리즈 정보 가져오기
                 //getLocalBoshList('credhub');
                 //BOSH uaa 릴리즈 정보 가져오기
@@ -549,6 +567,7 @@ function getLocalBoshList(type){
             if( data.length == 0 ){
                 return;
             }
+            console.log(data);
             if( type == "bosh" ){
                 var options = "<option value=''>BOSH 릴리즈를 선택하세요.</option>";
                 for( var i=0; i<data.length; i++ ){
@@ -566,7 +585,23 @@ function getLocalBoshList(type){
                     }else options += "<option value='"+data[i]+"'>"+data[i]+"</option>";
                 }
                 $(".w2ui-msg-body select[name='osConfRelease']").html(options);
-            } else if(type == 'bpm') {
+            } else if(type == 'garden-runc'){
+                var options = "<option value=''>GARDEN RUNC 릴리즈를 선택하세요.</option>";
+                for( var i=0; i<data.length; i++ ){
+                    if( data[i] == boshInfo.gardenRuncRelease ){
+                        options += "<option value='"+data[i]+"' selected>"+data[i]+"</option>";
+                    }else options += "<option value='"+data[i]+"'>"+data[i]+"</option>";
+                }
+                $(".w2ui-msg-body select[name='gardenRuncRelease']").html(options);
+            } else if(type == 'bosh-virtualbox-cpi'){
+                var options = "<option value=''>BOSH VIRTUAL BOX CPI 릴리즈를 선택하세요.</option>";
+                for( var i=0; i<data.length; i++ ){
+                    if( data[i] == boshInfo.boshVirtualBoxCpiRelease ){
+                        options += "<option value='"+data[i]+"' selected>"+data[i]+"</option>";
+                    }else options += "<option value='"+data[i]+"'>"+data[i]+"</option>";
+                }
+                $(".w2ui-msg-body select[name='boshVirtualBoxCpiRelease']").html(options);
+            }else if(type == 'bpm') {
                 var options = "<option value=''>BPM 릴리즈를 선택하세요.</option>";
                 for( var i=0; i<data.length; i++ ){
                     if( data[i] == boshInfo.boshBpmRelease ){
@@ -771,6 +806,8 @@ function saveDefaultInfo(type){
             ntp                           : $(".w2ui-msg-body input[name=ntp]").val(),
             boshRelease                   : $(".w2ui-msg-body select[name=boshRelease]").val(),
             osConfRelease                 : $(".w2ui-msg-body select[name=osConfRelease]").val(),
+            gardenRuncRelease             : $(".w2ui-msg-body select[name=gardenRuncRelease]").val(),
+            boshVirtualBoxCpiRelease      : $(".w2ui-msg-body select[name=boshVirtualBoxCpiRelease]").val(),
             boshCpiRelease                : $(".w2ui-msg-body select[name=boshCpiRelease]").val(),
             boshBpmRelease                : $(".w2ui-msg-body select[name=boshBpmRelease]").val(),
             enableSnapshots               : $(".w2ui-msg-body input:radio[name=enableSnapshots]:checked").val(),
@@ -796,25 +833,49 @@ function saveDefaultInfo(type){
             googlePopup(); return;
         }else if(iaas.toUpperCase() == "AZURE" ){
             azurePopup(); return;
+        }else if(iaas.toUpperCase() == "WARDEN" ){
+            wardenPopup(); return;
         }
     }else{
-        $.ajax({
-            type : "PUT",
-            url : "/deploy/bootstrap/install/setDefaultInfo",
-            contentType : "application/json",
-            async : true,
-            data : JSON.stringify(boshInfo),
-            success : function(data, status) {
-                w2popup.unlock();
-                w2popup.clear();
-                selectNetworkInfoPopup(iaas);
-            },
-            error : function( e, status ) {
-                w2popup.unlock();
-                w2popup.unlock();
-                w2alert("기본정보 등록에 실패 하였습니다.", "BOOTSTRAP 설치");
-            }
-        });
+        if(iaas.toUpperCase() == "WARDEN"){
+            $.ajax({
+                type : "PUT",
+                url : "/deploy/bootstrap/install/setWardenDefaultInfo",
+                contentType : "application/json",
+                async : true,
+                data : JSON.stringify(boshInfo),
+                success : function(data, status) {
+                    w2popup.unlock();
+                    w2popup.clear();
+                    bootstrapId = data.id;
+                    selectNetworkInfoPopup(iaas);
+                },
+                error : function( e, status ) {
+                    w2popup.unlock();
+                    w2popup.unlock();
+                    w2alert("기본정보 등록에 실패 하였습니다.", "BOOTSTRAP 설치");
+                }
+            });
+        }
+        else{
+            $.ajax({
+                type : "PUT",
+                url : "/deploy/bootstrap/install/setDefaultInfo",
+                contentType : "application/json",
+                async : true,
+                data : JSON.stringify(boshInfo),
+                success : function(data, status) {
+                    w2popup.unlock();
+                    w2popup.clear();
+                    selectNetworkInfoPopup(iaas);
+                },
+                error : function( e, status ) {
+                    w2popup.unlock();
+                    w2popup.unlock();
+                    w2alert("기본정보 등록에 실패 하였습니다.", "BOOTSTRAP 설치");
+                }
+            });
+        }
     }
 }
 
@@ -829,6 +890,8 @@ function selectNetworkInfoPopup(iaas){
         networkInfoPopup("#GoogleNetworkInfoDiv", "#GoogleNetworkInfoBtnDiv", 570)   
     }else if( iaas.toUpperCase() == "AZURE" ){
         networkInfoPopup("#AzureNetworkInfoDiv", "#AzureNetworkInfoBtnDiv", 570)   
+    }else if( iaas.toUpperCase() == "WARDEN" ){
+        networkInfoPopup("#WardenNetworkInfoDiv", "#WardenNetworkInfoBtnDiv", 570)
     }
     else{
         networkInfoPopup("#NetworkInfoDiv", "#NetworkInfoBtnDiv", 535);
@@ -950,6 +1013,9 @@ function resourceInfoPopup(height){
                 if(iaas.toUpperCase() == 'VSPHERE'){  
                     $(".w2ui-msg-body .cloudInstanceTypeDiv").hide(); 
                     $(".w2ui-msg-body .vsphereResourceDiv").show(); 
+                }else if(iaas.toUpperCase() == 'WARDEN'){
+                    $(".w2ui-msg-body .cloudInstanceTypeDiv").hide();
+                    $(".w2ui-msg-body .vsphereResourceDiv").hide();
                 }else{
                     $(".w2ui-msg-body .cloudInstanceTypeDiv").show();
                     $(".w2ui-msg-body .vsphereResourceDiv").hide(); 
@@ -1000,8 +1066,10 @@ function setReourceData(){
         $(".w2ui-msg-body #stemcell").val(resourceInfo.stemcell);
 //        $(".w2ui-msg-body input[name='stemcell']").data('selected', {text:resourceInfo.stemcell});
 //        $(".w2ui-msg-body input[name='boshPassword']").val(resourceInfo.boshPassword);
-        if(iaas.toUpperCase() != 'VSPHERE') { 
-            $(".w2ui-msg-body input[name='cloudInstanceType']").val(resourceInfo.cloudInstanceType);
+        if(iaas.toUpperCase() != 'VSPHERE') {
+            if(iaas.toUpperCase() != 'WARDEN'){
+                $(".w2ui-msg-body input[name='cloudInstanceType']").val(resourceInfo.cloudInstanceType);
+            }
         }else{
             $(".w2ui-msg-body input[name='resourcePoolCpu']").val(resourceInfo.resourcePoolCpu);
             $(".w2ui-msg-body input[name='resourcePoolRam']").val(resourceInfo.resourcePoolRam);
@@ -1016,9 +1084,25 @@ function setReourceData(){
  ***************************************************************** */
 function saveResourceInfo(type){
     var cloudInstanceType = "";
-     if(iaas != 'VSPHERE' ) { 
-         cloudInstanceType =  $(".w2ui-msg-body input[name='cloudInstanceType']").val();  
+    var resourcePoolCpu = "";
+    var resourcePoolRam = "";
+    var resourcePoolDisk = "";
+
+    if(iaas != 'VSPHERE' ) {
+         cloudInstanceType =  $(".w2ui-msg-body input[name='cloudInstanceType']").val();
     }
+    console.log(iaas);
+    if(iaas != 'WARDEN' ) {
+        resourceInfo = {
+            id: bootstrapId,
+            stemcell: $(".w2ui-msg-body select[name='stemcell']").val(),
+            cloudInstanceType: cloudInstanceType,
+            resourcePoolCpu: resourcePoolCpu,
+            resourcePoolRam: resourcePoolRam,
+            resourcePoolDisk: resourcePoolDisk
+        }
+    }
+    else{
     resourceInfo = {
             id                : bootstrapId,
             stemcell          : $(".w2ui-msg-body select[name='stemcell']").val(),
@@ -1026,6 +1110,7 @@ function saveResourceInfo(type){
             resourcePoolCpu   : $(".w2ui-msg-body input[name='resourcePoolCpu']").val(),
             resourcePoolRam   : $(".w2ui-msg-body input[name='resourcePoolRam']").val(),
             resourcePoolDisk  : $(".w2ui-msg-body input[name='resourcePoolDisk']").val()
+    }
     }
     if( type == "before"){
         w2popup.unlock();
@@ -1828,7 +1913,6 @@ function popupClose() {
 </div>
 
 
-
 <!-- 기본 설정 정보 -->
 <div id="DefaultInfoDiv" style="width:100%;height:100%;" hidden="true">
     <form id="defaultInfoForm" >
@@ -1903,6 +1987,22 @@ function popupClose() {
                         <div style="width: 60%">
                             <select name="osConfRelease" class="form-control select-control">
                                 <option value="">OS-CONF 릴리즈를 선택하세요.</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="w2ui-field gardenRuncDiv">
+                        <label style="text-align:left; width:36%; font-size:11px;">GARDEN-RUNC 릴리즈</label>
+                        <div style="width: 60%">
+                            <select name="gardenRuncRelease" class="form-control select-control">
+                                <option value="">GARDEN-RUNC 릴리즈를 선택하세요.</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="w2ui-field boshVirtualBoxCpiDiv">
+                        <label style="text-align:left; width:36%; font-size:11px;">BOSH VIRTUAL-BOX CPI 릴리즈</label>
+                        <div style="width: 60%">
+                            <select name="boshVirtualBoxCpiRelease" class="form-control select-control">
+                                <option value="">BOSH VIRTUAL-BOX CPI 릴리즈를 선택하세요.</option>
                             </select>
                         </div>
                     </div>
@@ -2307,6 +2407,76 @@ function popupClose() {
     </div>
 </div>
 
+
+
+<!-- Warden 네트워크 div -->
+<div id="WardenNetworkInfoDiv" style="width:100%;height:100%;" hidden="true">
+    <form id="WardenNetworkInfoForm">
+        <div style="margin-left:2%;display:inline-block;width:97%;padding-top:20px;">
+            <ul class="progressStep_5" >
+                <li class="pass">Warden 정보</li>
+                <li class="pass">기본 정보</li>
+                <li class="active">네트워크 정보</li>
+                <li class="before">리소스 정보</li>
+                <li class="before">설치</li>
+            </ul>
+        </div>
+        <div class="w2ui-page page-0" style="margin-top:15px;padding:0 3%;">
+            <div class="panel panel-info" style="margin-bottom:20px;">
+                <div  class="panel-heading" style="padding:5px 5% 10px 5%;"><b>네트워크 Internal</b></div>
+                <div class="panel-body">
+                    <div class="w2ui-field" >
+                        <label style="text-align: left;width:36%;font-size:11px;">디렉터 내부 IP</label>
+                        <div style="width: 60%">
+                            <input name="privateStaticIp" type="text"  style="display:inline-block;width:70%;" placeholder="예) 10.0.0.20"/>
+                        </div>
+                    </div>
+                    <div class="w2ui-field">
+                        <label style="text-align: left;width:36%;font-size:11px;">네트워크 명</label>
+                        <div style="width: 60%">
+                            <input name="networkName" type="text"  style="display:inline-block;width:70%;" placeholder="네트워크 명을 입력하세요."/>
+                        </div>
+                    </div>
+                    <div class="w2ui-field">
+                        <label class="subnetId" style="text-align: left;width:36%;font-size:11px;">outbound_network_name 명</label>
+                        <div style="width: 60%">
+                            <input name="subnetId" type="text"  style="display:inline-block;width:70%;" placeholder="outbound_network_name 명을 입력하세요."/>
+                        </div>
+                    </div>
+                    <div class="w2ui-field">
+                        <label style="text-align: left;width:36%;font-size:11px;">IP 주소 범위</label>
+                        <div style="width: 60%">
+                            <input name="subnetRange" type="text"  style="display:inline-block;width:70%;"  placeholder="예) 10.0.0.0/24"/>
+                        </div>
+                    </div>
+                    <div class="w2ui-field">
+                        <label style="text-align: left;width:36%;font-size:11px;">게이트웨이</label>
+                        <div style="width: 60%">
+                            <input name="subnetGateway" type="text"  style="display:inline-block;width:70%;" placeholder="예) 10.0.0.1"/>
+                        </div>
+                    </div>
+                    <div class="w2ui-field">
+                        <label style="text-align: left;width:36%;font-size:11px;">DNS</label>
+                        <div style="width: 60%">
+                            <input name="subnetDns" type="text" style="display:inline-block;width:70%;" placeholder="예) 8.8.8.8"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="w2ui-buttons" id="WardenNetworkInfoBtnDiv" hidden="true">
+        <button class="btn" style="float: left;" onclick="saveNetworkInfo('before');" >이전</button>
+        <button class="btn" style="float: right; padding-right: 15%" onclick="saveNetworkInfo('after');" >다음>></button>
+    </div>
+</div>
+
+
+
+
+
+
+
 <!-- 리소스 사용량 -->
 <div id="ResourceInfoDiv" style="width:100%;height:100%;" hidden="true">
     <form id="resourceInfoForm">
@@ -2365,7 +2535,7 @@ function popupClose() {
     </form>
     <div class="w2ui-buttons" id="ResourceInfoBtnDiv" hidden="true">
         <button class="btn" style="float: left;" onclick="saveResourceInfo('before');" >이전</button>
-        <button class="btn" style="float: right; padding-right: 15%" onclick="$('#resourceInfoForm').submit();" >다음>></button>
+        <button class="btn" style="float: right; padding-right: 15%" onclick="saveResourceInfo('after');" >다음>></button>
     </div>
 </div>
 
