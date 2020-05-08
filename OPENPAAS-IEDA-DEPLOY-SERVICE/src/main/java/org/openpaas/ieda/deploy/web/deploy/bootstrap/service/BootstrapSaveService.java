@@ -90,6 +90,8 @@ public class BootstrapSaveService {
             vo.setOsConfRelease(dto.getOsConfRelease());
             vo.setBoshUaaRelease(dto.getBoshUaaRelease());
             vo.setBoshCredhubRelease(dto.getBoshCredhubRelease());
+            vo.setGardenRuncRelease(dto.getGardenRuncRelease());
+            vo.setBoshVirtualBoxCpiRelease(dto.getBoshVirtualBoxCpiRelease());
         }else{
             throw new CommonException(message.getMessage("common.badRequest.exception.code", null, Locale.KOREA),
                     message.getMessage("common.badRequest.message", null, Locale.KOREA), HttpStatus.BAD_REQUEST);

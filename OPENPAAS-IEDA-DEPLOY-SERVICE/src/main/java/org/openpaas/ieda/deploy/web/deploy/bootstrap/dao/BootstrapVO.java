@@ -33,6 +33,8 @@ public class BootstrapVO {
     private String enableSnapshots;//스냅샷 사용 유무
     private String ntp; // NTP
     private String osConfRelease;
+    private String gardenRuncRelease;
+    private String boshVirtualBoxCpiRelease;
     private String paastaMonitoringUse; //PaaS-TA 모니터링 사용 유무
     private String paastaMonitoringAgentRelease; //PaaS-TA 모니터링 사용시 Agent 릴리즈
     private String paastaMonitoringSyslogRelease; //PaaS-TA 모니터링 사용시 Syslog 릴리즈
@@ -407,4 +409,19 @@ public class BootstrapVO {
 		this.paastaMonitoringSyslogRelease = paastaMonitoringSyslogRelease;
 	}
 
+    public String getGardenRuncRelease() {
+        return gardenRuncRelease;
+    }
+
+    public void setGardenRuncRelease(String gardenRuncRelease) {
+        this.gardenRuncRelease = gardenRuncRelease;
+    }
+
+    public String getBoshVirtualBoxCpiRelease() {
+        return boshVirtualBoxCpiRelease;
+    }
+
+    public void setBoshVirtualBoxCpiRelease(String boshVirtualBoxCpiRelease) {
+        this.boshVirtualBoxCpiRelease = boshVirtualBoxCpiRelease;
+    }
 }

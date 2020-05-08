@@ -63,6 +63,7 @@ public class BootstrapDeployAsyncService {
         String accumulatedLog= null;
         String releaseVersion = "";
         String versionNumber = "";
+        String temp = "";
 
         BufferedReader bufferedReader = null;
         BootstrapVO bootstrapInfo = new BootstrapVO();
@@ -81,7 +82,7 @@ public class BootstrapDeployAsyncService {
 
             ManifestTemplateVO result = commonDao.selectManifetTemplate(bootstrapInfo.getIaasType(), releaseVersion, "BOOTSTRAP", "bosh");
             String deployFile = "";
-            
+
             if( bootstrapInfo != null ) {
                 deployFile = MANIFEST_TEMPLATE_PATH + SEPARATOR + result.getTemplateVersion()  + SEPARATOR  + "common" + SEPARATOR  + result.getCommonBaseTemplate();
             }
@@ -96,17 +97,21 @@ public class BootstrapDeployAsyncService {
                 saveDeployStatus(bootstrapInfo);
                 //2. bosh 실행
                 List<String> cmd = new ArrayList<String>();
+
                 cmd.add("bosh");
                 cmd.add("create-env");
                 cmd.add(deployFile);
                 cmd.add("--state="+ DEPLOYMENT_DIR + bootstrapInfo.getDeploymentFile().replace(".yml","")+"-state.json");
                 cmd.add("--vars-store="+CREDENTIAL_DIR+ bootstrapInfo.getCredentialKeyName());
-                
+
                 settingBoshInfo(cmd, bootstrapInfo);
                 settingIaasCpiInfo(cmd, bootstrapInfo, result);
                 //settingUaaInfo(cmd, bootstrapInfo, result);
                 //settingCredhubInfo(cmd, bootstrapInfo, result);
                 settingJumpBoxInfo(cmd, bootstrapInfo, result);
+                if("warden".equalsIgnoreCase(dto.getIaasType())){
+                    settingWardenInfo(cmd, bootstrapInfo, result);
+                }
                 if(!StringUtils.isEmpty(bootstrapInfo.getPublicStaticIp()) && bootstrapInfo.getPublicStaticIp() != null){
                     settingPublicIpInfo(cmd, bootstrapInfo, result);
                 }
@@ -116,7 +121,7 @@ public class BootstrapDeployAsyncService {
                 }
                 
                 cmd.add("--tty");
-                
+                System.out.println(cmd);
                 ProcessBuilder builder = new ProcessBuilder(cmd);
                 builder.redirectErrorStream(true);
                 Process process = builder.start();
@@ -127,6 +132,8 @@ public class BootstrapDeployAsyncService {
                 String info = null;
                 StringBuffer accumulatedBuffer = new StringBuffer();
                 while ((info = bufferedReader.readLine()) != null){
+                    System.out.println(info);
+                    temp = info;
                     accumulatedBuffer.append(info).append("\n");
                     DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, "started", Arrays.asList(info));
                 }
@@ -177,17 +184,20 @@ public class BootstrapDeployAsyncService {
                 }
             }
         }catch(RuntimeException e){
-        
             status = "error";
-            DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, "error", Arrays.asList("배포 중 Exception이 발생하였습니다."));
-            if ( bootstrapInfo != null ) {
-                bootstrapInfo.setDeployLog(accumulatedLog);
+            e.printStackTrace();
+            if(!(accumulatedLog.contains("Succeeded") && bootstrapInfo.getIaasType().equalsIgnoreCase("warden"))){
+                DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, "error", Arrays.asList("배포 중 Exception이 발생하였습니다."));
+                if ( bootstrapInfo != null ) {
+                    bootstrapInfo.setDeployLog(accumulatedLog);
+                }
+                String deployStatus = message.getMessage("common.deploy.status.failed", null, Locale.KOREA);
+                if( deployStatus != null ) {
+                    bootstrapInfo.setDeployStatus( deployStatus );
+                }
+                saveDeployStatus(bootstrapInfo);
             }
-            String deployStatus = message.getMessage("common.deploy.status.failed", null, Locale.KOREA);
-            if( deployStatus != null ) {
-                bootstrapInfo.setDeployStatus( deployStatus );
-            }
-            saveDeployStatus(bootstrapInfo);
+
         }catch ( Exception e) {    
             status = "error";
             e.printStackTrace();
@@ -203,6 +213,17 @@ public class BootstrapDeployAsyncService {
         }finally {
             try {
                 if(bufferedReader!=null) {
+                    if(accumulatedLog.contains("Succeeded") && bootstrapInfo.getIaasType().equalsIgnoreCase("warden")){
+                        status = "done";
+                        bootstrapInfo.setDeployStatus( message.getMessage("common.deploy.status.done", null,  Locale.KOREA ) );
+                        saveDeployStatus(bootstrapInfo);
+                        DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, "done", Arrays.asList("", "BOOTSTRAP 설치가 완료되었습니다."));
+                    }
+                    /*
+                    if(temp.equals("Succeeded") && bootstrapInfo.getIaasType().equalsIgnoreCase("warden")){
+                        System.out.println("GOOD WARDEN2");
+                    }*/
+
                     bufferedReader.close();
                     
                 }
@@ -270,6 +291,26 @@ public class BootstrapDeployAsyncService {
         cmd.add("-v");
         cmd.add("osRelease="+ RELEASE_DIR + SEPARATOR + vo.getOsConfRelease()+ "");
     }
+
+    /****************************************************************
+     * @project : Paas 플랫폼 설치 자동화
+     * @description :  Warden 정의
+     * @title : settingWardenInfo
+     * @return : void
+     *****************************************************************/
+    private void settingWardenInfo(List<String> cmd, BootstrapVO vo, ManifestTemplateVO result){
+        cmd.add("-v");
+        cmd.add("gardenRuncRelease=" + RELEASE_DIR + SEPARATOR + vo.getGardenRuncRelease() + "");
+        cmd.add("-v");
+        cmd.add("boshVirtaulBoxCpiRelease=" + RELEASE_DIR + SEPARATOR + vo.getBoshVirtualBoxCpiRelease() + "");
+        cmd.add("-o");
+        cmd.add(MANIFEST_TEMPLATE_PATH + SEPARATOR + vo.getIaasType().toLowerCase() + SEPARATOR + "outbound-network.yml");
+        cmd.add("-o");
+        cmd.add(MANIFEST_TEMPLATE_PATH + SEPARATOR + result.getTemplateVersion()  + SEPARATOR  + "common" + SEPARATOR  + "bosh-lite.yml");
+        cmd.add("-o");
+        cmd.add(MANIFEST_TEMPLATE_PATH + SEPARATOR + result.getTemplateVersion()  + SEPARATOR  + "common" + SEPARATOR  + "bosh-lite-runc.yml");
+    }
+
     
 /*    *//****************************************************************
      * @project : Paas 플랫폼 설치 자동화
@@ -403,23 +444,30 @@ public class BootstrapDeployAsyncService {
             cmd.add("resourcePoolRAM=" + vo.getResourcePoolRam());
             cmd.add("-v");
             cmd.add("resourcePoolDisk=" + vo.getResourcePoolDisk());
+        }else if("warden".equalsIgnoreCase(vo.getIaasType())){
+            cmd.add("-v");
+            cmd.add("network=" + vo.getNetworkName());
+            cmd.add("-v");
+            cmd.add("outbound_network_name=" + vo.getSubnetId());
         }
         cmd.add("-v");
         cmd.add("boshCpiRelease=" + RELEASE_DIR + SEPARATOR + vo.getBoshCpiRelease() + "");
         cmd.add("-v");
         cmd.add("stemcell=" + STEMCELL_DIR + SEPARATOR + vo.getStemcell() + "");
-        if(!"vsphere".equalsIgnoreCase(vo.getIaasType())){
-        cmd.add("-v");
-        cmd.add("cloudInstanceType=" + vo.getCloudInstanceType());
+        if(!("vsphere".equalsIgnoreCase(vo.getIaasType())|| "warden".equalsIgnoreCase(vo.getIaasType()))){
+            cmd.add("-v");
+            cmd.add("cloudInstanceType=" + vo.getCloudInstanceType());
         }
         cmd.add("-v");
         cmd.add("internal_ip=" + vo.getPrivateStaticIp());
-        cmd.add("-v");
-        cmd.add("default_key_name=" + vo.getIaasConfig().getCommonKeypairName());
-        cmd.add("-v");
-        cmd.add("default_security_groups=" + vo.getIaasConfig().getCommonSecurityGroup());
-        cmd.add("-v");
-        cmd.add("private_key=" + PRIVATE_KEY_PATH + vo.getIaasConfig().getCommonKeypairPath());
+        if(!"warden".equalsIgnoreCase(vo.getIaasType())) {
+            cmd.add("-v");
+            cmd.add("default_key_name=" + vo.getIaasConfig().getCommonKeypairName());
+            cmd.add("-v");
+            cmd.add("default_security_groups=" + vo.getIaasConfig().getCommonSecurityGroup());
+            cmd.add("-v");
+            cmd.add("private_key=" + PRIVATE_KEY_PATH + vo.getIaasConfig().getCommonKeypairPath());
+        }
         
     }
     
@@ -456,6 +504,7 @@ public class BootstrapDeployAsyncService {
      * @return : BootstrapVO
     *****************************************************************/
     public BootstrapVO saveDeployStatus(BootstrapVO bootstrapVo) {
+        System.out.println(bootstrapVo.getDeployStatus());
         if ( bootstrapVo == null ) {
             return null;
         }
@@ -474,5 +523,5 @@ public class BootstrapDeployAsyncService {
     public void deployAsync(BootStrapDeployDTO.Install dto, Principal principal) {
             deployBootstrap(dto, principal);
     }
-    
+
 }

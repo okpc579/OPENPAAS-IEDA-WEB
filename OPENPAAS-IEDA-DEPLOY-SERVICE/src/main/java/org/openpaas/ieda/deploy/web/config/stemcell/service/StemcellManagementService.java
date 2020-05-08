@@ -180,7 +180,11 @@ public class StemcellManagementService {
                         message.getMessage("common.badRequest.message", null, Locale.KOREA), HttpStatus.BAD_REQUEST);
             }
             
-            //create lock file 
+            //create lock file
+            if(dto.getStemcellFileName().equals("")) {
+                dto.setStemcellFileName(dto.getDownloadLink().substring(dto.getDownloadLink().lastIndexOf("/")+1));
+            }
+
             int index = dto.getStemcellFileName().lastIndexOf(".");
             String lockFile = dto.getStemcellFileName().substring(0, index);
             Boolean checkLock = commonService.lockFileSet(lockFile +"-download");
@@ -303,6 +307,7 @@ public class StemcellManagementService {
                 downloadUrl = baseUrl+subUrl+"-"+dto.getStemcellVersion().toLowerCase()+"-"+iaas+"-"+dto.getOsName().toLowerCase()+dto.getOsVersion()+"-go_agent.tgz";
             }else{
                 downloadUrl = baseUrl+SEPARATOR+subUrl+"-"+dto.getStemcellVersion().toLowerCase()+"-"+iaas+"-"+dto.getOsName().toLowerCase()+"-"+dto.getOsVersion().toLowerCase()+"-go_agent.tgz";
+                System.out.println(downloadUrl);
             }
             
         }else if(dto.getFileType().toLowerCase().equalsIgnoreCase("url")){
@@ -382,6 +387,8 @@ public class StemcellManagementService {
             }
         } else if(iaas.equalsIgnoreCase("azure")){
             iaasHypervisor = iaas + "-hyperv";
+        }else if(iaas.equalsIgnoreCase("warden")){
+            iaasHypervisor = "vsphere" + "-esxi";
         }
         return iaasHypervisor;
     }
@@ -398,12 +405,13 @@ public class StemcellManagementService {
             if(!dto.getOsName().equalsIgnoreCase("windows")){
                 if(dto.getLight().toLowerCase().equalsIgnoreCase("true")){//light stemcell
                     if( dto.getIaasType().toLowerCase().equalsIgnoreCase("aws") ){
-                        baseUrl = PUBLIC_STEMCELLS_NEWEST_URL+SEPARATOR+"bosh-aws-light-stemcells";
+                        baseUrl = PUBLIC_STEMCELLS_NEWEST_URL+SEPARATOR+"bosh-aws-light-stemcells"+SEPARATOR+dto.getStemcellVersion().toLowerCase();
                     }else if( dto.getIaasType().toLowerCase().equalsIgnoreCase("google") ){
-                        baseUrl = PUBLIC_STEMCELLS_NEWEST_URL+SEPARATOR+"bosh-gce-light-stemcells";
+                        baseUrl = PUBLIC_STEMCELLS_NEWEST_URL+SEPARATOR+"bosh-gce-light-stemcells"+SEPARATOR+dto.getStemcellVersion().toLowerCase();
                     }
                 }else{
-                    baseUrl = PUBLIC_STEMCELLS_NEWEST_URL+SEPARATOR+"bosh-core-stemcells"+SEPARATOR+dto.getIaasType().toLowerCase();
+                    //baseUrl = PUBLIC_STEMCELLS_NEWEST_URL+SEPARATOR+"bosh-core-stemcells"+SEPARATOR+dto.getIaasType().toLowerCase();
+                    baseUrl = PUBLIC_STEMCELLS_NEWEST_URL+SEPARATOR+"bosh-core-stemcells"+SEPARATOR+dto.getStemcellVersion().toLowerCase();
                 }
             }else{
                 baseUrl = PUBLIC_STEMCELLS_WINDOWS_URL+PUBLIC_STEMCELLS_NEWEST_URL.substring(8)+SEPARATOR;

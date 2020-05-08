@@ -35,6 +35,7 @@ public class ReleaseManagementService {
     
     final private static String CLOUDFOUNDRYURL = "https://bosh.io/d/github.com/cloudfoundry/";
     final private static String CLOUDFOUNDRYINCUBATORURL = "https://bosh.io/d/github.com/cloudfoundry-incubator/";
+    final private static String CPPFORLIFEURL = "https://bosh.io/d/github.com/cppforlife/";
     final private static String SEPARATOR = System.getProperty("file.separator");
     final private static String TMPDIRECTORY = LocalDirectoryConfiguration.getTmpDir();
     final private static String RELEASEDIRECTORY = LocalDirectoryConfiguration.getReleaseDir();
@@ -321,7 +322,12 @@ public class ReleaseManagementService {
         String boshCpiUrl = "";
         if(dto.getReleaseType().toLowerCase().equalsIgnoreCase("bosh_cpi")){
             boshCpiUrl = "bosh-"+dto.getIaasType().toLowerCase()+"-cpi-release?v=";
-            dto.setDownloadLink(CLOUDFOUNDRYINCUBATORURL + boshCpiUrl + dto.getReleasePathVersion());
+            if(!dto.getIaasType().toLowerCase().equals("warden")) {
+                //dto.setDownloadLink(CLOUDFOUNDRYINCUBATORURL + boshCpiUrl + dto.getReleasePathVersion());
+                dto.setDownloadLink(CLOUDFOUNDRYURL + boshCpiUrl + dto.getReleasePathVersion());
+            }else{
+                dto.setDownloadLink(CPPFORLIFEURL + boshCpiUrl + dto.getReleasePathVersion());
+            }
         } else if(dto.getReleaseType().equalsIgnoreCase("etcd")){
             dto.setDownloadLink(CLOUDFOUNDRYINCUBATORURL + dto.getReleaseType().toLowerCase() + "-release?v=" + dto.getReleasePathVersion());
         } else if(dto.getReleaseType().equalsIgnoreCase("bosh")){
@@ -332,6 +338,10 @@ public class ReleaseManagementService {
             dto.setDownloadLink(CLOUDFOUNDRYINCUBATORURL + dto.getReleaseType().toLowerCase() + "-release?v=" + dto.getReleasePathVersion());
         }else if( dto.getReleaseType().equalsIgnoreCase("bpm") ){
        	 dto.setDownloadLink(CLOUDFOUNDRYINCUBATORURL + "bpm-release?v=" + dto.getReleasePathVersion());
+        }else if( dto.getReleaseType().equalsIgnoreCase("garaden-runc") ){
+            dto.setDownloadLink(CLOUDFOUNDRYURL + dto.getReleaseType().toLowerCase()+"-release?v=" + dto.getReleasePathVersion());
+        }else if( dto.getReleaseType().equalsIgnoreCase("bosh-virtualbox-cpi") ){
+            dto.setDownloadLink(CPPFORLIFEURL + dto.getReleaseType().toLowerCase()+ "-release?v=" + dto.getReleasePathVersion());
         }else{
             dto.setDownloadLink(CLOUDFOUNDRYURL + dto.getReleaseType().toLowerCase()+"-release?v=" + dto.getReleasePathVersion());
         }

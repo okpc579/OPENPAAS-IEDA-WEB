@@ -203,6 +203,7 @@ CREATE TABLE ieda_bootstrap
   bosh_bpm_release                  VARCHAR(100),
   bosh_uaa_release                  VARCHAR(100),
   os_conf_release                   VARCHAR(100),
+  garden_runc_release               VARCHAR(100),
   bosh_cred_hub_release             VARCHAR(100),
   enable_snapshots                  VARCHAR(100),
   snapshot_schedule                 VARCHAR(100),
