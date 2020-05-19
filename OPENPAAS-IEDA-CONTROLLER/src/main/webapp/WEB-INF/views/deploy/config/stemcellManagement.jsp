@@ -397,8 +397,8 @@ function stemcellInfoSave(stemcellInfo){
  * 기능 : stemcellFileUpload
  **************************************************************/
 function stemcellFileUpload(stemcellInfo){
-    var form = $(".w2ui-msg-body #settingForm");
-    var formData = new FormData(form);
+    var form = $(".w2ui-msg-body #settinfForm");
+    var formData = new FormData(form[0]);
     var files = $('.w2ui-msg-body #stemcellPathFile')[0].files;
     formData.append("file", files[0]);
     formData.append("overlay", stemcellInfo.overlayCheck);

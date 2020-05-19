@@ -1,4 +1,4 @@
-create database ieda default character set utf8 collate utf8_general_ci;
+create database if not exists ieda default character set utf8 collate utf8_general_ci;
 
 #ieda 데이터 베이스 생성
 use ieda;
@@ -10,7 +10,7 @@ SET character_set_server = utf8;
 SET NAMES 'UTF8';
 SET CHARACTER SET 'UTF8';
 
-CREATE TABLE ieda_user
+CREATE TABLE IF NOT EXISTS ieda_user
 (
   user_id                           VARCHAR(255)  NOT NULL,
   user_password                     VARCHAR(255)  NOT NULL,
@@ -33,7 +33,7 @@ CREATE TABLE ieda_user
 #수정자      UPDATE_USER_ID          VARCHAR(255) NOT NULL
 #수정일자     UPDATE_DATE             DATE NOT NULL  SYSDATE
 
-CREATE TABLE ieda_role
+CREATE TABLE IF NOT EXISTS ieda_role
 (
   role_id                           INT(11)       NOT NULL AUTO_INCREMENT,
   role_name                         VARCHAR(255)  NOT NULL,
@@ -45,7 +45,7 @@ CREATE TABLE ieda_role
   PRIMARY KEY (role_id)
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 
-CREATE TABLE ieda_role_detail
+CREATE TABLE IF NOT EXISTS ieda_role_detail
 (
   seq                               INT(11)       NOT NULL,
   role_id                           INT(11)       NOT NULL,
@@ -57,7 +57,7 @@ CREATE TABLE ieda_role_detail
   PRIMARY KEY (role_id, seq)
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 
-CREATE TABLE ieda_common_code
+CREATE TABLE IF NOT EXISTS ieda_common_code
 (
   code_idx                          INT(11)       NOT NULL AUTO_INCREMENT,
   code_name                         VARCHAR(255)  NOT NULL,
@@ -76,7 +76,7 @@ CREATE TABLE ieda_common_code
   INDEX COMMON_CODE_INDEX (code_value)
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 
-CREATE TABLE ieda_director_config
+CREATE TABLE IF NOT EXISTS ieda_director_config
 (
   ieda_director_config_seq          INT(11)       NOT NULL AUTO_INCREMENT,
   current_deployment                VARCHAR(255),
@@ -98,7 +98,7 @@ CREATE TABLE ieda_director_config
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 
 # public stemcell
-CREATE TABLE ieda_public_stemcells
+CREATE TABLE IF NOT EXISTS ieda_public_stemcells
 (
   id                                INT(11)       NOT NULL AUTO_INCREMENT,
   download_status                   VARCHAR(255),
@@ -118,7 +118,7 @@ CREATE TABLE ieda_public_stemcells
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 
 #system_release(new)
-CREATE TABLE ieda_system_releases
+CREATE TABLE IF NOT EXISTS ieda_system_releases
 (
   id                                INT(11)       NOT NULL AUTO_INCREMENT,
   release_type                      VARCHAR(255),
@@ -139,7 +139,7 @@ CREATE TABLE ieda_system_releases
 SET FOREIGN_KEY_CHECKS=0 ;
 /* Drop Tables */
 DROP TABLE IF EXISTS ieda_manifest_template CASCADE;
-CREATE TABLE ieda_manifest_template
+CREATE TABLE IF NOT EXISTS ieda_manifest_template
 (
   id                                INT           NOT NULL AUTO_INCREMENT,
   deploy_type                       VARCHAR(255)  NOT NULL,
@@ -171,7 +171,7 @@ SET FOREIGN_KEY_CHECKS=1 ;
 SET FOREIGN_KEY_CHECKS=0 ;
 
 DROP TABLE IF EXISTS ieda_manifest CASCADE;
-CREATE TABLE ieda_manifest
+CREATE TABLE IF NOT EXISTS ieda_manifest
 (
   id                                INT           NOT NULL AUTO_INCREMENT,
   manifest_idx                      INT,
@@ -189,7 +189,7 @@ CREATE TABLE ieda_manifest
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 
 # BOOTSTRAP
-CREATE TABLE ieda_bootstrap
+CREATE TABLE IF NOT EXISTS ieda_bootstrap
 (
   id                                INT(11)       NOT NULL AUTO_INCREMENT,
   iaas_config_id                    INT(11)       NOT NULL,
@@ -204,6 +204,7 @@ CREATE TABLE ieda_bootstrap
   bosh_uaa_release                  VARCHAR(100),
   os_conf_release                   VARCHAR(100),
   garden_runc_release               VARCHAR(100),
+  bosh_virtual_box_cpi_release      VARCHAR(100),
   bosh_cred_hub_release             VARCHAR(100),
   enable_snapshots                  VARCHAR(100),
   snapshot_schedule                 VARCHAR(100),
@@ -242,7 +243,7 @@ CREATE TABLE ieda_bootstrap
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;	
 
 # BOSH	
-CREATE TABLE ieda_bosh	
+CREATE TABLE IF NOT EXISTS ieda_bosh	
 (	
   id                                INT(11)       NOT NULL AUTO_INCREMENT,	
   iaas_type                         VARCHAR(255)  NOT NULL,	
@@ -283,7 +284,7 @@ CREATE TABLE ieda_bosh
   PRIMARY KEY (id)
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 
-CREATE TABLE ieda_network
+CREATE TABLE IF NOT EXISTS ieda_network
 (
   id                                INT(11)       NOT NULL,
   deploy_type                       VARCHAR(100)  NOT NULL,
@@ -309,7 +310,7 @@ CREATE TABLE ieda_network
  ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 
 #Resource
-CREATE TABLE ieda_resource
+CREATE TABLE IF NOT EXISTS ieda_resource
 (
   id                                INT(11)       NOT NULL,
   deploy_type                       VARCHAR(100)  NOT NULL,
@@ -345,7 +346,7 @@ CREATE TABLE ieda_resource
 )ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 
 #cf
-CREATE TABLE ieda_cf
+CREATE TABLE IF NOT EXISTS ieda_cf
 (
   id                                INT(11)       NOT NULL AUTO_INCREMENT,
   iaas_type                         VARCHAR(255)  NOT NULL,
@@ -384,7 +385,7 @@ CREATE TABLE ieda_cf
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 
 #job setting
-CREATE table ieda_job_setting (
+CREATE TABLE IF NOT EXISTS ieda_job_setting (
   id                            INT          NOT NULL AUTO_INCREMENT,
   seq                           INT          NOT NULL,
   deploy_type                   VARCHAR(100) NOT NULL,
@@ -399,7 +400,7 @@ CREATE table ieda_job_setting (
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 
 #cf deployment job template
-CREATE table ieda_cf_job_template (
+CREATE TABLE IF NOT EXISTS ieda_cf_job_template (
   id                             INT NOT NULL AUTO_INCREMENT, 
   seq                            INT NOT NULL,
   deploy_type                    VARCHAR(100) NOT NULL,
@@ -417,7 +418,7 @@ CREATE table ieda_cf_job_template (
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 
 
-CREATE TABLE ieda_service_pack
+CREATE TABLE IF NOT EXISTS ieda_service_pack
 (
   id                                INT(11)       NOT NULL AUTO_INCREMENT,
   iaas                              VARCHAR(255)  NOT NULL,
@@ -431,7 +432,7 @@ CREATE TABLE ieda_service_pack
   PRIMARY KEY (id)
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 
-CREATE TABLE ieda_iaas_account 
+CREATE TABLE IF NOT EXISTS ieda_iaas_account 
 (
   id                          INT(11)      NOT NULL auto_increment,
   iaas_type                   VARCHAR(100) NOT NULL,
@@ -454,7 +455,7 @@ CREATE TABLE ieda_iaas_account
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 
-CREATE TABLE ieda_iaas_config
+CREATE TABLE IF NOT EXISTS ieda_iaas_config
 (
   id                                    INT(11)      NOT NULL auto_increment,
   iaas_type                             VARCHAR(100) NOT NULL,
@@ -484,7 +485,7 @@ CREATE TABLE ieda_iaas_config
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 
-CREATE TABLE ieda_director_credential
+CREATE TABLE IF NOT EXISTS ieda_director_credential
 (
   id                                    INT(11)      NOT NULL auto_increment,
   director_credential_name              VARCHAR(100),
@@ -499,7 +500,7 @@ CREATE TABLE ieda_director_credential
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 
 
-CREATE TABLE ieda_hybrid_director_config
+CREATE TABLE IF NOT EXISTS ieda_hybrid_director_config
 (
   ieda_director_config_seq          INT(11)  NOT NULL AUTO_INCREMENT,
   current_deployment                VARCHAR(255),
@@ -520,7 +521,7 @@ CREATE TABLE ieda_hybrid_director_config
   PRIMARY KEY (ieda_director_config_seq)
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 
-CREATE TABLE ieda_bootstrap_cpi_config
+CREATE TABLE IF NOT EXISTS ieda_bootstrap_cpi_config
 (
   id                                    INT(11)      NOT NULL auto_increment,
   iaas_type                             VARCHAR(100) NOT NULL,
@@ -534,7 +535,7 @@ CREATE TABLE ieda_bootstrap_cpi_config
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 
 
-CREATE TABLE ieda_bootstrap_resource_config
+CREATE TABLE IF NOT EXISTS ieda_bootstrap_resource_config
 (
   id                                    INT(11)      NOT NULL auto_increment,
   iaas_type                             VARCHAR(100) NOT NULL,
@@ -549,7 +550,7 @@ CREATE TABLE ieda_bootstrap_resource_config
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 
-CREATE TABLE ieda_bootstrap_credential_config
+CREATE TABLE IF NOT EXISTS ieda_bootstrap_credential_config
 (
   id                                    INT(11)      NOT NULL auto_increment,
   iaas_type                             VARCHAR(100),
@@ -565,7 +566,7 @@ CREATE TABLE ieda_bootstrap_credential_config
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 
-CREATE TABLE ieda_bootstrap_config
+CREATE TABLE IF NOT EXISTS ieda_bootstrap_config
 (
   id                                INT(11)      NOT NULL auto_increment,
   iaas_type                         VARCHAR(100),
@@ -584,7 +585,7 @@ CREATE TABLE ieda_bootstrap_config
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 
-CREATE TABLE ieda_bootstrap_network_config (
+CREATE TABLE IF NOT EXISTS ieda_bootstrap_network_config (
   id                                INT(11) NOT NULL AUTO_INCREMENT,
   iaas_type                         VARCHAR(100) NOT NULL,
   network_config_name               VARCHAR(100) NOT NULL,
@@ -601,7 +602,7 @@ CREATE TABLE ieda_bootstrap_network_config (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 
-CREATE TABLE ieda_bootstrap_default_config (
+CREATE TABLE IF NOT EXISTS ieda_bootstrap_default_config (
   id                                INT(11) NOT NULL AUTO_INCREMENT,
   iaas_type                         VARCHAR(100) NOT NULL,
   default_config_name               VARCHAR(100) NOT NULL,
@@ -633,7 +634,7 @@ CREATE TABLE ieda_bootstrap_default_config (
 
 #hb cf deploymnet
 
-CREATE TABLE ieda_hb_cfDeployment_default_config
+CREATE TABLE IF NOT EXISTS ieda_hb_cfDeployment_default_config
 (
   id                                    INT(11)      NOT NULL auto_increment,
   iaas_type                             VARCHAR(100) NOT NULL,
@@ -658,7 +659,7 @@ CREATE TABLE ieda_hb_cfDeployment_default_config
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 
-CREATE TABLE ieda_hb_cfDeployment_network_config
+CREATE TABLE IF NOT EXISTS ieda_hb_cfDeployment_network_config
 (
   id                                    INT(11)      NOT NULL auto_increment,
   iaas_type                             VARCHAR(100) NOT NULL,
@@ -694,7 +695,7 @@ CREATE TABLE ieda_hb_cfDeployment_network_config
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 
 
-CREATE TABLE ieda_hb_cfDeployment_resource_config
+CREATE TABLE IF NOT EXISTS ieda_hb_cfDeployment_resource_config
 (
   id                                    INT(11)      NOT NULL auto_increment,
   iaas_type                             VARCHAR(100) NOT NULL,
@@ -712,7 +713,7 @@ CREATE TABLE ieda_hb_cfDeployment_resource_config
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 
-CREATE TABLE ieda_hb_cfDeployment_credential_config
+CREATE TABLE IF NOT EXISTS ieda_hb_cfDeployment_credential_config
 (
   id                                    INT(11)      NOT NULL auto_increment,
   iaas_type                             VARCHAR(100) NOT NULL,
@@ -734,7 +735,7 @@ CREATE TABLE ieda_hb_cfDeployment_credential_config
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 
 
-CREATE TABLE ieda_hb_cfDeployment_instance_config
+CREATE TABLE IF NOT EXISTS ieda_hb_cfDeployment_instance_config
 (
   id                                    INT(11)      NOT NULL auto_increment,
   iaas_type                             VARCHAR(100) NOT NULL,
@@ -764,7 +765,7 @@ CREATE TABLE ieda_hb_cfDeployment_instance_config
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 
-CREATE TABLE ieda_hb_cfDeployment
+CREATE TABLE IF NOT EXISTS ieda_hb_cfDeployment
 (
   id                                INT(11)       NOT NULL AUTO_INCREMENT,
   iaas_type                         VARCHAR(255)  NOT NULL,

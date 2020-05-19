@@ -475,7 +475,7 @@ function socketDwonload(releaseInfo){
  *********************************************************/
 function releaseFileUpload(releaseInfo){
     var form = $(".w2ui-msg-body #settingForm");
-    var formData = new FormData(form);
+    var formData = new FormData(form[0]);
 
     var files = $('.w2ui-msg-body #releasePathFile')[0].files;
     formData.append("file", files[0]);

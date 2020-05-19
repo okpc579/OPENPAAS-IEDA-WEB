@@ -335,9 +335,7 @@ public class ReleaseManagementService {
         } else if( dto.getReleaseType().equalsIgnoreCase("os-conf")){
             dto.setDownloadLink(CLOUDFOUNDRYURL + "os-conf-release?v=" + dto.getReleasePathVersion());
         }else if( dto.getReleaseType().equalsIgnoreCase("bpm") ){
-            dto.setDownloadLink(CLOUDFOUNDRYINCUBATORURL + dto.getReleaseType().toLowerCase() + "-release?v=" + dto.getReleasePathVersion());
-        }else if( dto.getReleaseType().equalsIgnoreCase("bpm") ){
-       	 dto.setDownloadLink(CLOUDFOUNDRYINCUBATORURL + "bpm-release?v=" + dto.getReleasePathVersion());
+            dto.setDownloadLink(CLOUDFOUNDRYURL + dto.getReleaseType().toLowerCase() + "-release?v=" + dto.getReleasePathVersion());
         }else if( dto.getReleaseType().equalsIgnoreCase("garaden-runc") ){
             dto.setDownloadLink(CLOUDFOUNDRYURL + dto.getReleaseType().toLowerCase()+"-release?v=" + dto.getReleasePathVersion());
         }else if( dto.getReleaseType().equalsIgnoreCase("bosh-virtualbox-cpi") ){

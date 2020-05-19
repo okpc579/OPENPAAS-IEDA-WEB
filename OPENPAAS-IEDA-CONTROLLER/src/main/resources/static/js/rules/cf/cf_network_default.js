@@ -5,13 +5,11 @@ $(function() {
     $("#defaultNetworkInfoForm").validate({
         ignore : "",
         rules:{
-           subnetId_1 : {
-               required : function(){ return checkEmpty( $(".w2ui-msg-body input[name='subnetId_1']").val() ); } 
-           },cloudSecurityGroups_1 : {
-               required : function(){ return checkEmpty( $(".w2ui-msg-body input[name='cloudSecurityGroups_1']").val() ); }
-           },availabilityZone_1 : {
+	        publicStaticIp_1 : {
+                ipv4     : function(){ return $(".w2ui-msg-body input[name='publicStaticIp_1']").val(); }
+            },availabilityZone_1 : {
                required : function(){ 
-                   if( iaas.toLowerCase() == "openstack" ){
+                   if( iaas.toLowerCase() == "openstack" || iaas.toLowerCase() == "warden"){
                        return false;
                    }else{
                        return checkEmpty( $(".w2ui-msg-body input[name='availabilityZone_1']").val() ); 
@@ -53,9 +51,8 @@ $(function() {
                ,ipv4: function(){ return $(".w2ui-msg-body input[name='subnetStaticTo_1']").val(); }
            }
         }, messages: {
-            subnetId_1            : { required: "서브넷 아이디"+text_required_msg }
-            ,cloudSecurityGroups_1 : { required: "보안 그룹"+text_required_msg }
-            ,availabilityZone_1    : { required: "가용 영역"+text_required_msg } 
+            publicStaticIp       : { required: "CF API TARGET IP"+text_required_msg }
+            , availabilityZone_1    : { required: "가용 영역"+text_required_msg } 
             , subnetRange_1        : { required: "서브넷 범위"+text_required_msg } 
             , subnetGateway_1      : { required: "게이트웨이"+text_required_msg }
             , subnetDns_1          : { required: "DNS" + text_required_msg }

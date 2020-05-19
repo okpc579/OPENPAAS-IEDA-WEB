@@ -102,8 +102,11 @@ public class BootstrapDeployAsyncService {
                 cmd.add("create-env");
                 cmd.add(deployFile);
                 cmd.add("--state="+ DEPLOYMENT_DIR + bootstrapInfo.getDeploymentFile().replace(".yml","")+"-state.json");
-                cmd.add("--vars-store="+CREDENTIAL_DIR+ bootstrapInfo.getCredentialKeyName());
-
+                if("warden".equalsIgnoreCase(dto.getIaasType())){
+                    cmd.add("--vars-store="+CREDENTIAL_DIR+ "warden-creds.yml");
+                }else{
+                    cmd.add("--vars-store="+CREDENTIAL_DIR+ bootstrapInfo.getCredentialKeyName());
+                }
                 settingBoshInfo(cmd, bootstrapInfo);
                 settingIaasCpiInfo(cmd, bootstrapInfo, result);
                 //settingUaaInfo(cmd, bootstrapInfo, result);
@@ -159,7 +162,12 @@ public class BootstrapDeployAsyncService {
                 }    else {
                     // 타겟 테스트
                     DirectorInfoDTO directorInfo = null;
-                    if(bootstrapInfo.getPublicStaticIp().isEmpty() || bootstrapInfo.getPublicStaticIp() == null){
+                    if(bootstrapInfo.getPublicStaticIp() == null){
+                    //if(StringUtils.isEmpty(bootstrapInfo.getPublicStaticIp()) || bootstrapInfo.getPublicStaticIp() == null){
+                        DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, "started", Arrays.asList("","BOOTSTRAP 디렉터 정보 : https://" + bootstrapInfo.getPrivateStaticIp() + ":25555"));
+                        DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, "started", Arrays.asList("BOOTSTRAP 디렉터 타겟 접속 테스트..."));
+                        directorInfo = directorConfigService.getDirectorInfo(bootstrapInfo.getPrivateStaticIp(), 25555, "admin", "admin");
+                    }else if(bootstrapInfo.getPublicStaticIp().isEmpty()){
                         DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, "started", Arrays.asList("","BOOTSTRAP 디렉터 정보 : https://" + bootstrapInfo.getPrivateStaticIp() + ":25555"));
                         DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, "started", Arrays.asList("BOOTSTRAP 디렉터 타겟 접속 테스트..."));
                         directorInfo = directorConfigService.getDirectorInfo(bootstrapInfo.getPrivateStaticIp(), 25555, "admin", "admin");
@@ -186,7 +194,7 @@ public class BootstrapDeployAsyncService {
         }catch(RuntimeException e){
             status = "error";
             e.printStackTrace();
-            if(!(accumulatedLog.contains("Succeeded") && bootstrapInfo.getIaasType().equalsIgnoreCase("warden"))){
+            //if(!(accumulatedLog.contains("Succeeded") && bootstrapInfo.getIaasType().equalsIgnoreCase("warden"))){
                 DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, "error", Arrays.asList("배포 중 Exception이 발생하였습니다."));
                 if ( bootstrapInfo != null ) {
                     bootstrapInfo.setDeployLog(accumulatedLog);
@@ -196,7 +204,7 @@ public class BootstrapDeployAsyncService {
                     bootstrapInfo.setDeployStatus( deployStatus );
                 }
                 saveDeployStatus(bootstrapInfo);
-            }
+           // }
 
         }catch ( Exception e) {    
             status = "error";
@@ -213,12 +221,14 @@ public class BootstrapDeployAsyncService {
         }finally {
             try {
                 if(bufferedReader!=null) {
+                    /*
                     if(accumulatedLog.contains("Succeeded") && bootstrapInfo.getIaasType().equalsIgnoreCase("warden")){
                         status = "done";
                         bootstrapInfo.setDeployStatus( message.getMessage("common.deploy.status.done", null,  Locale.KOREA ) );
                         saveDeployStatus(bootstrapInfo);
                         DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, "done", Arrays.asList("", "BOOTSTRAP 설치가 완료되었습니다."));
                     }
+                    */
                     /*
                     if(temp.equals("Succeeded") && bootstrapInfo.getIaasType().equalsIgnoreCase("warden")){
                         System.out.println("GOOD WARDEN2");
@@ -303,12 +313,21 @@ public class BootstrapDeployAsyncService {
         cmd.add("gardenRuncRelease=" + RELEASE_DIR + SEPARATOR + vo.getGardenRuncRelease() + "");
         cmd.add("-v");
         cmd.add("boshVirtaulBoxCpiRelease=" + RELEASE_DIR + SEPARATOR + vo.getBoshVirtualBoxCpiRelease() + "");
+//        cmd.add("-v");
+//        cmd.add("credhubRelease="  + RELEASE_DIR + SEPARATOR + "credhub-2.4.0-ubuntu-xenial-315.64-20190703-003700-568359054-20190703003705.tgz" + "");
+//        cmd.add("-v");
+//        cmd.add("uaaRelease="  + RELEASE_DIR + SEPARATOR + "uaa-73.5.0-ubuntu-xenial-315.64-20190709-215817-751355338-20190709215839.tgz" + "");
         cmd.add("-o");
         cmd.add(MANIFEST_TEMPLATE_PATH + SEPARATOR + vo.getIaasType().toLowerCase() + SEPARATOR + "outbound-network.yml");
         cmd.add("-o");
         cmd.add(MANIFEST_TEMPLATE_PATH + SEPARATOR + result.getTemplateVersion()  + SEPARATOR  + "common" + SEPARATOR  + "bosh-lite.yml");
         cmd.add("-o");
         cmd.add(MANIFEST_TEMPLATE_PATH + SEPARATOR + result.getTemplateVersion()  + SEPARATOR  + "common" + SEPARATOR  + "bosh-lite-runc.yml");
+//        cmd.add("-o");
+//        cmd.add(MANIFEST_TEMPLATE_PATH + SEPARATOR + result.getTemplateVersion()  + SEPARATOR  + "common" + SEPARATOR  + "uaa.yml");
+//        cmd.add("-o");
+//        cmd.add(MANIFEST_TEMPLATE_PATH + SEPARATOR + result.getTemplateVersion()  + SEPARATOR  + "common" + SEPARATOR  + "credhub.yml");
+
     }
 
     

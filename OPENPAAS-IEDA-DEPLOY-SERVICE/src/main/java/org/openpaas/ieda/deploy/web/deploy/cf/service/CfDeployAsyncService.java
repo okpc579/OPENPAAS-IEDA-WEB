@@ -18,7 +18,6 @@ import org.openpaas.ieda.deploy.web.common.dao.CommonDeployDAO;
 import org.openpaas.ieda.deploy.web.common.dao.ManifestTemplateVO;
 import org.openpaas.ieda.deploy.web.config.setting.dao.DirectorConfigVO;
 import org.openpaas.ieda.deploy.web.config.setting.service.DirectorConfigService;
-import org.openpaas.ieda.deploy.web.deploy.bootstrap.service.BootstrapDeployAsyncService;
 import org.openpaas.ieda.deploy.web.deploy.cf.dao.CfDAO;
 import org.openpaas.ieda.deploy.web.deploy.cf.dao.CfVO;
 import org.openpaas.ieda.deploy.web.deploy.cf.dto.CfParamDTO;
@@ -57,12 +56,19 @@ public class CfDeployAsyncService {
      * @return : void
     *****************************************************************/
     public void deploy(CfParamDTO.Install dto, Principal principal, String platform) {
-        
         String deploymentFileName = "";
         String messageEndpoint =  "/deploy/cf/install/logs"; 
         CfVO vo = cfService.getCfInfo(Integer.parseInt(dto.getId()));
+
+
+        System.out.println("##########################################################");
+        System.out.println("IaaS : " + vo.getIaasType());
+        System.out.println("ReleaseVersion : " + vo.getReleaseVersion());
+        System.out.println("ReleaseName : " + vo.getReleaseName());
+        System.out.println("##########################################################");
         ManifestTemplateVO result = commonDao.selectManifetTemplate(vo.getIaasType(), vo.getReleaseVersion(), "CFDEPLOYMENT", vo.getReleaseName());
         deploymentFileName = vo != null ? vo.getDeploymentFile() : "";
+        List<String> cmd = new ArrayList<String>(); //bosh cloud config 명령어 실행 줄 Cloud Config 관련 Rest API를 아직 지원 안하는 것 같음 2018.08.01
 
         if ( StringUtils.isEmpty(deploymentFileName) ) {
             throw new CommonException(message.getMessage("common.badRequest.exception.code", null, Locale.KOREA),
@@ -71,11 +77,9 @@ public class CfDeployAsyncService {
         String cloudConfigFile = DEPLOYMENT_DIR + SEPARATOR + deploymentFileName;
         String errorMessage = message.getMessage("common.internalServerError.message", null, Locale.KOREA);
         String status = "";
-
         try {
             BufferedReader bufferedReader = null;
             DirectorConfigVO directorInfo = directorConfigService.getDefaultDirector();
-
             // 2019. 08. CF v9.3.0, PaaS-TA v4.6 지원 추가.
             // 2019. 10. CF v9.5.0, PaaS-TA v5.0 지원 추가.
             if("5.0.0".equals(vo.getReleaseVersion()) || "5.5.0".equals(vo.getReleaseVersion()) || "9.3.0".equals(vo.getReleaseVersion()) || "9.5.0".equals(vo.getReleaseVersion())  || "4.0".equals(vo.getReleaseVersion()) || "4.6".equals(vo.getReleaseVersion()) || "5.0".equals(vo.getReleaseVersion())){
@@ -83,8 +87,8 @@ public class CfDeployAsyncService {
             } else {
                 deleteRuntimeConfig(vo, directorInfo, principal, messageEndpoint, result);
             }
-            
-            List<String> cmd = new ArrayList<String>(); //bosh cloud config 명령어 실행 줄 Cloud Config 관련 Rest API를 아직 지원 안하는 것 같음 2018.08.01
+
+
             cmd.add("bosh");
             cmd.add("-e");
             cmd.add(directorInfo.getDirectorName());
@@ -113,7 +117,9 @@ public class CfDeployAsyncService {
                     cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getTemplateVersion()+"/common/cf-deployment-multi-az.yml");
                 }
             } else {
+
                 cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getTemplateVersion()+"/common/"+result.getCommonBaseTemplate()+"");
+
             }
             setDefualtInfo(cmd, vo, result);
             
@@ -125,8 +131,10 @@ public class CfDeployAsyncService {
                 }
                 settingPaasTaMonitoringInfo(vo, cmd, result);
             }
-            
-            setPublicNetworkIpUse(cmd, vo, result);
+            if(!"warden".equals(vo.getIaasType().toLowerCase())){
+            	setPublicNetworkIpUse(cmd, vo, result);
+            }
+
             if("postgres".equals(vo.getCfDbType().toLowerCase())){
                 postgresDbUse(cmd, result);
             }
@@ -138,7 +146,9 @@ public class CfDeployAsyncService {
             }
             cmd.add("--tty");
             cmd.add("-n");
+
             //cmd.add("--no-redact");
+            System.out.println(cmd.toString());
             builder = new ProcessBuilder(cmd);
             builder.redirectErrorStream(true);
             Process process = builder.start();
@@ -341,6 +351,14 @@ public class CfDeployAsyncService {
         cmd.add("--vars-store="+CF_CREDENTIAL_DIR+ SEPARATOR +vo.getKeyFile()+"");
         cmd.add("-v");
         cmd.add("deployment_name="+vo.getDeploymentName()+"");
+        System.out.println("========================@@@@@@@@@@@@@@@@@@");
+        System.out.println(vo.getIaasType());
+        System.out.println("warden".equals(vo.getIaasType().toLowerCase()));
+        System.out.println("========================@@@@@@@@@@@@@@@@@@");
+        if("warden".equals(vo.getIaasType().toLowerCase())){
+        	cmd.add("-o");
+        	cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getTemplateVersion()+"/common/bosh-lite.yml");
+        }
         cmd.add("-v");
         cmd.add("system_domain="+vo.getDomain()+"");
         cmd.add("-v");
@@ -357,8 +375,12 @@ public class CfDeployAsyncService {
             cmd.add("portal_domain="+vo.getDomain()+"");
         }
         if(result.getReleaseType().equals("paasta")){
+        	
+        	if(!"warden".equals(vo.getIaasType().toLowerCase()))
+        	{
             cmd.add("-o");
             cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getTemplateVersion()+"/common/use-haproxy-compiled-release.yml");
+        	}
             cmd.add("-v");
             cmd.add("inception_os_user_name="+vo.getInceptionOsUserName()+"");
             cmd.add("-o");
@@ -402,6 +424,7 @@ public class CfDeployAsyncService {
                     cmd.add("haproxy_public_ip="+vo.getNetworks().get(i).getPublicStaticIp()+"");
                     cmd.add("-o");
                     cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getTemplateVersion()+"/common/"+result.getCommonOptionTemplate());
+                    System.out.println("======================="+result.getCommonOptionTemplate()+"=======================");
                 }
             }
         }
@@ -456,7 +479,7 @@ public class CfDeployAsyncService {
     *****************************************************************/
     @Async
     public void deployAsync(CfParamDTO.Install dto, Principal principal, String platform) {
-        deploy(dto, principal, platform);
+    	deploy(dto, principal, platform);
     }
 
 }
