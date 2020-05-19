@@ -17,7 +17,7 @@ $(function() {
 	            required: function(){ return checkEmpty( $(".w2ui-msg-body input[name='subnetDns_1']").val() ); }
 	           ,ipv4    : function(){
 	               if( $(".w2ui-msg-body input[name='subnetDns_1']").val().indexOf(",") > -1 ){
-                       var list = ($(".w2ui-msg-body input[name='subnetDns_1']").val()).split(",");
+                       var list = ($(".w2ui-msg-body input[name='subnetDns_1']").val()).split(","); 
                        var flag = true;
                        for( var i=0; i<list.length; i++ ){
                            var val = validateIpv4(list[i].trim());

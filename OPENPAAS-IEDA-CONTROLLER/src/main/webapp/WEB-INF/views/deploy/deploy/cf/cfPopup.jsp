@@ -12,7 +12,7 @@
         max-width:280px
     }
     .popover-content {
-        width:275px;
+        width:275px; 
         max-height: 300px;
         overflow-y: auto;
     }

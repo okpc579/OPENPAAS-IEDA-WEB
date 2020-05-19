@@ -357,7 +357,7 @@ public class CfDeployAsyncService {
         System.out.println("========================@@@@@@@@@@@@@@@@@@");
         if("warden".equals(vo.getIaasType().toLowerCase())){
         	cmd.add("-o");
-        	cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getTemplateVersion()+"/common/bosh-lite.yml");
+        	cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getTemplateVersion()+"/common/bosh-lite.yml"); 
         	cmd.add("-v");
         	cmd.add("static_ip="+vo.getNetworks().get(0).getPublicStaticIp()+"");
         }
