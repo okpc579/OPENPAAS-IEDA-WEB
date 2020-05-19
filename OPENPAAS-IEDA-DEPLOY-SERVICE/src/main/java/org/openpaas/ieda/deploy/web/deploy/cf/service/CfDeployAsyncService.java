@@ -358,6 +358,8 @@ public class CfDeployAsyncService {
         if("warden".equals(vo.getIaasType().toLowerCase())){
         	cmd.add("-o");
         	cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getTemplateVersion()+"/common/bosh-lite.yml");
+        	cmd.add("-v");
+        	cmd.add("static_ip="+vo.getNetworks().get(0).getPublicStaticIp()+"");
         }
         cmd.add("-v");
         cmd.add("system_domain="+vo.getDomain()+"");
