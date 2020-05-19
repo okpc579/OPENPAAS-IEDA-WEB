@@ -12,7 +12,7 @@
         max-width:280px
     }
     .popover-content {
-        width:275px;
+        width:275px; 
         max-height: 300px;
         overflow-y: auto;
     }
@@ -515,12 +515,14 @@
      * 기능 : settingNetwork
      *********************************************************/
     function settingNetwork( index ){
-        if( iaas.toLowerCase() == 'aws' || iaas.toLowerCase() == "openstack" || iaas.toLowerCase() == 'warden'){
+        if( iaas.toLowerCase() == 'aws' || iaas.toLowerCase() == "openstack"){
             addInternalNetworkInputs('#defaultNetworkInfoDiv_1', "#defaultNetworkInfoForm" );
         }else if( iaas.toLowerCase() == 'google' ){
             addInternalNetworkInputs('#googleNetworkInfoDiv_1', "#googleNetworkInfoForm" );
         }else if( iaas.toLowerCase() == 'azure' ){
             addInternalNetworkInputs('#azureNetworkInfoDiv_1', "#azureNetworkInfoForm" );
+        }else if( iaas.toLowerCase() == 'warden' ){
+            addInternalNetworkInputs('#wardenNetworkInfoDiv_1', "#wardenNetworkInfoForm" );
         }
         else{
             addInternalNetworkInputs('#vSphereNetworkInfoDiv_1', "#vSphereNetworkInfoForm" );
@@ -1648,6 +1650,9 @@
             else if(iaas.toUpperCase() == "AZURE" ){
                 defaultNetworkPopup("#azureNetworkInfo", 605);
             }
+            else if(iaas.toUpperCase() == "WARDEN" ){
+                defaultNetworkPopup("#wardenNetworkInfo", 605);
+            }
             else{
                 defaultNetworkPopup("#defaultNetworkInfo", 600);
             }
@@ -2086,6 +2091,86 @@
     <div class="w2ui-buttons" id="googleNetworkInfoButtons" hidden="true">
         <button class="btn" style="float: left;" onclick="saveNetworkInfo('before', 'googleNetworkInfoForm');" >이전</button>
         <button class="btn" style="float: right; padding-right: 15%" onclick="$('#googleNetworkInfoForm').submit();" >다음>></button>
+    </div>
+</div>
+
+
+<!-- warden Network 설정 DIV -->
+<div id="wardenNetworkInfoDiv" style="width: 100%; height: 100%;" hidden="true">
+    <form id="wardenNetworkInfoForm">
+        <div style="margin-left:2%;display:inline-block;width:97%;padding-top:20px;">
+            <ul class="progressStep_6">
+                <li class="pass">기본 정보</li>
+                <li class="active">네트워크 정보</li>
+                <li class="before">Key 생성</li>
+                <li class="before">리소스 정보</li>
+                <li class="before">인스턴스 정보</li>
+                <li class="before install">설치</li>
+            </ul>
+        </div>
+        <div class="w2ui-page page-0" style="margin-top:15px;padding:0 3%;">
+            <div class="panel panel-info" style="margin-bottom:10px;">
+                <div  class="panel-heading" style=""><b>External 네트워크</b></div>
+                <div class="panel-body">
+                    <div class="w2ui-field">
+                        <label style="text-align: left;width:36%;font-size:11px;">CF API TARGET IP</label>
+                        <div style=" width: 60%;">
+                            <input name="publicStaticIp" type="text" style="display:inline-blcok; width:70%;" placeholder="예) 10.0.0.20"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-info" id="wardenNetworkInfoDiv_1">
+                <div  class="panel-heading" style="position:relative;">
+                    <b>Internal 네트워크</b>
+                    <div style="position: absolute;right: 10px ;top: 2px; ">
+                        <a class="btn btn-info btn-sm addInternal" onclick="addInternalNetworkInputs('#wardenNetworkInfoDiv_1', '#wardenNetworkInfoForm');">추가</a>
+                    </div>
+                </div>
+                <div class="panel-body">                 
+                    <div class="w2ui-field">
+                        <label style="text-align: left;width:36%;font-size:11px;">서브넷 범위</label>
+                        <div style=" width: 60%;">
+                            <input name="subnetRange_1" type="text"  style="display:inline-blcok; width:70%;" placeholder="예) 10.0.0.0/24-warden"/>
+                        </div>
+                    </div>
+                    <div class="w2ui-field">
+                        <label style="text-align: left;width:36%;font-size:11px;">게이트웨이</label>
+                        <div style=" width: 60%;">
+                            <input name="subnetGateway_1" type="text"  style="display:inline-blcok; width:70%;" placeholder="예) 10.0.0.1"/>
+                        </div>
+                    </div>
+                    <div class="w2ui-field">
+                        <label style="text-align: left;width:36%;font-size:11px;">DNS</label>
+                        <div style=" width: 60%;">
+                            <input name="subnetDns_1" type="text"  style="display:inline-blcok; width:70%;" placeholder="예) 8.8.8.8"/>
+                        </div>
+                    </div>
+                    <div class="w2ui-field">
+                        <label style="text-align: left; width: 36%; font-size: 11px;">IP할당 제외 대역</label>
+                        <div style=" width: 60%;">
+                            <input name="subnetReservedFrom_1" id="subnetReservedFrom_1" type="text" style="display:inline-block; width:32%;" placeholder="예) 10.0.0.100" />
+                            <span style="width: 4%; text-align: center;">&nbsp;&ndash; &nbsp;</span>
+                            <input name="subnetReservedTo_1" id="subnetReservedTo_1" type="text" style="display:inline-block; width:32%;" placeholder="예) 10.0.0.106" />
+                        </div>
+                    </div>
+                    <div class="w2ui-field">
+                        <label style="text-align: left; width: 36%; font-size: 11px;">IP할당 대역(최소 20개)</label>
+                        <div style=" width: 60%;">
+                            <input name="subnetStaticFrom_1" id="subnetStaticFrom_1" type="text" style="display:inline-block; width:32%;" placeholder="예) 10.0.0.100" />
+                            <span style="width: 4%; text-align: center;">&nbsp;&ndash; &nbsp;</span>
+                            <input name="subnetStaticTo_1" id="subnetStaticTo_1" type="text" style="display:iinline-block; width:32%;" placeholder="예) 10.0.0.106" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 추가 네트워크 div_1 -->
+            <div  id="wardenNetworkInfoDiv_2" hidden="true"></div>
+        </div>
+    </form>
+    <div class="w2ui-buttons" id="wardenNetworkInfoButtons" hidden="true">
+        <button class="btn" style="float: left;" onclick="saveNetworkInfo('before', 'wardenNetworkInfoForm');" >이전</button>
+        <button class="btn" style="float: right; padding-right: 15%" onclick="$('#wardenNetworkInfoForm').submit();" >다음>></button>
     </div>
 </div>
 
@@ -2700,6 +2785,7 @@
 <script type="text/javascript" src="<c:url value='/js/rules/cf/cf_network_aws.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/js/rules/cf/cf_network_vsphere.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/js/rules/cf/cf_network_google.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/js/rules/cf/cf_network_warden.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/js/rules/cf/cf_network_azure.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/js/rules/cf/cf_keyinfo.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/js/rules/cf/cf_resource.js'/>"></script>
