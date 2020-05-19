@@ -11,7 +11,8 @@ $(function(){
                 }
             }, cloudInstanceType: { 
                 required: function(){
-                    if( $(".w2ui-msg-body .vsphereResourceDiv").css("display") == "none"  ){
+                    //if( $(".w2ui-msg-body .vsphereResourceDiv").css("display") == "none"  ){
+                    if( $(".w2ui-msg-body .cloudInstanceTypeDiv").css("display") != "none"  ){
                         return checkEmpty( $(".w2ui-msg-body input[name='cloudInstanceType']").val() );
                     } else return false;
                 }

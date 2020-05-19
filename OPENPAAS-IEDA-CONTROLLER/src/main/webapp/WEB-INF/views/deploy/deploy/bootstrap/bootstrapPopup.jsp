@@ -254,6 +254,9 @@ function azurePopup(){
  * 설명 : warden 정보 입력 팝업 화면
  ***************************************************************** */
 function wardenPopup(){
+    $("#DefaultInfoPrev").hide();
+    $("#credentialKeyName").hide();
+    $("input[name=iaasType]").val("Warden");
     defaultInfoPop('warden');
 }
 
@@ -930,7 +933,8 @@ function settingVSPhereNetworkInfo(){
     $(".w2ui-msg-body input[name='privateStaticIp']").val(networkInfo.privateStaticIp);
     // 11.19. vsphere network info
     //$(".w2ui-msg-body input[name='subnetId']").val(networkInfo.subnetId);
-    $(".w2ui-msg-body input[name='networkName']").val(networkInfo.subnetId);
+    //$(".w2ui-msg-body input[name='networkName']").val(networkInfo.subnetId);
+    $(".w2ui-msg-body input[name='subnetId']").val(networkInfo.subnetId);
     $(".w2ui-msg-body input[name='networkName']").val(networkInfo.networkName);
     $(".w2ui-msg-body input[name='subnetRange']").val(networkInfo.subnetRange);
     $(".w2ui-msg-body input[name='subnetGateway']").val(networkInfo.subnetGateway);
@@ -1091,7 +1095,6 @@ function saveResourceInfo(type){
     if(iaas != 'VSPHERE' ) {
          cloudInstanceType =  $(".w2ui-msg-body input[name='cloudInstanceType']").val();
     }
-    console.log(iaas);
     if(iaas != 'WARDEN' ) {
         resourceInfo = {
             id: bootstrapId,
@@ -1289,14 +1292,12 @@ function installPopup(data){
             deploymentFile : data.deploymentFile
     }
     settingPopupTab("InstallDiv", iaas);
-    console.log('11');
     if(!lockFileSet(deploymentInfo.deploymentFile)) return;
     var message = "BOOTSTRAP ";
     var requestParameter = {
             id : bootstrapId,
             iaasType: iaas
     };
-    console.log('12');
     w2popup.open({
         title   : "<b>BOOTSTRAP 설치</b>",
         width   : 800,
@@ -1433,6 +1434,9 @@ function installPopup(data){
   ***************************************************************** */
  function settingPopupTab(div, iaas){
     $("ul."+div).find("li:eq(0)").each(function(i){
+        if(iaas == "warden"){
+            iaas = "Warden";
+        }
         $(this).html(iaas + " 정보");
     });
  }
@@ -1941,7 +1945,7 @@ function popupClose() {
                             <input name="directorName" type="text" style="display:inline-block;width:70%;" placeholder="디렉터 명을 입력하세요."/>
                         </div>
                     </div>
-                    <div class="w2ui-field">
+                    <div class="w2ui-field" id="credentialKeyName">
                         <label style="text-align: left;width:36%;font-size:11px;">디렉터 접속 인증서</label>
                         <div style="width: 60%">
                             <select name="credentialKeyName"  style="display:inline-block;width:70%;">
@@ -2096,7 +2100,7 @@ function popupClose() {
         </div>
     </form>
     <div class="w2ui-buttons" id="DefaultInfoButtonDiv"hidden="true">
-        <button class="btn" style="float: left;" onclick="saveDefaultInfo('before');" >이전</button>
+        <button id="DefaultInfoPrev" class="btn" style="float: left;" onclick="saveDefaultInfo('before');" >이전</button>
         <button class="btn" style="float: right;padding-right:15%" onclick="$('#defaultInfoForm').submit();" >다음>></button>
     </div>
 </div>
@@ -2467,7 +2471,7 @@ function popupClose() {
     </form>
     <div class="w2ui-buttons" id="WardenNetworkInfoBtnDiv" hidden="true">
         <button class="btn" style="float: left;" onclick="saveNetworkInfo('before');" >이전</button>
-        <button class="btn" style="float: right; padding-right: 15%" onclick="saveNetworkInfo('after');" >다음>></button>
+        <button class="btn" style="float: right; padding-right: 15%" onclick="setNetworkValidate('#WardenNetworkInfoForm');" >다음>></button>
     </div>
 </div>
 
@@ -2535,7 +2539,7 @@ function popupClose() {
     </form>
     <div class="w2ui-buttons" id="ResourceInfoBtnDiv" hidden="true">
         <button class="btn" style="float: left;" onclick="saveResourceInfo('before');" >이전</button>
-        <button class="btn" style="float: right; padding-right: 15%" onclick="saveResourceInfo('after');" >다음>></button>
+        <button class="btn" style="float: right; padding-right: 15%" onclick="$('#resourceInfoForm').submit();" >다음>></button>
     </div>
 </div>
 

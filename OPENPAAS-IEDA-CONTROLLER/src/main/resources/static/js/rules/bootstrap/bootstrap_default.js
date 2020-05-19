@@ -14,8 +14,11 @@ $(function() {
                 required: function(){
                     return checkEmpty( $(".w2ui-msg-body input[name='directorName']").val() );
                 }
-            },  credentialKeyName: { 
+            },  credentialKeyName: {
                 required: function(){
+                    if( $("input[name='iaasType']").val() == "Warden" ){
+                        return false;
+                    }
                     return checkEmpty( $(".w2ui-msg-body select[name='credentialKeyName']").val() );
                 }
             }, ntp: { 
@@ -34,11 +37,25 @@ $(function() {
                 required: function(){
                     return checkEmpty( $(".w2ui-msg-body select[name='boshBpmRelease']").val() );
                 }
-            }, osConfRelease: { 
+            }, osConfRelease: {
                 required: function(){
                     return checkEmpty( $(".w2ui-msg-body select[name='osConfRelease']").val() );
                 }
-            }, snapshotSchedule: { 
+            }, gardenRuncRelease: {
+                required: function(){
+                    if( $("input[name='iaasType']").val() != "Warden" ){
+                        return false;
+                    }
+                    return checkEmpty( $(".w2ui-msg-body select[name='gardenRuncRelease']").val() );
+                }
+            }, boshVirtualBoxCpiRelease: {
+                required: function(){
+                    if( $("input[name='iaasType']").val() != "Warden" ){
+                        return false;
+                    }
+                    return checkEmpty( $(".w2ui-msg-body select[name='boshVirtualBoxCpiRelease']").val() );
+                }
+            }, snapshotSchedule: {
                 required: function(){
                     if( $(".w2ui-msg-body input:radio[name=enableSnapshots]:checked").val() == "true"){
                         return checkEmpty( $(".w2ui-msg-body input[name='snapshotSchedule']").val() );
@@ -119,7 +136,11 @@ $(function() {
                 required:  "BOSH BPM 릴리즈"+select_required_msg
             }, osConfRelease: { 
                 required:  "BOSH OS_CONF 릴리즈"+select_required_msg
-            }, snapshotSchedule: { 
+            }, gardenRuncRelease: {
+                required:  "BOSH GARDEN-RUNC 릴리즈"+select_required_msg
+            }, boshVirtualBoxCpiRelease: {
+                required:  "BOSH VIRTUALBOX-CPI 릴리즈"+select_required_msg
+            }, snapshotSchedule: {
                 required:  "스냅샷 스케쥴"+text_required_msg
             }, syslogAddress: {
                 required: "Syslog Address"+text_required_msg
