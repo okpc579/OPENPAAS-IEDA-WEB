@@ -1925,11 +1925,11 @@
             </ul>
         </div>
         <div class="w2ui-page page-0" style="margin-top:15px;padding:0 3%;">
-            <div class="panel panel-info" style="margin-bottom:10px;">
+            <div class="panel panel-info" style="margin-bottom:10px;">    
                 <div  class="panel-heading" style=""><b>External 네트워크</b></div>
                 <div class="panel-body">
                     <div class="w2ui-field">
-                        <label style="text-align: left;width:36%;font-size:11px;">CF API TARGET IP</label>
+                        <label style="text-align: left;width:36%;font-size:11px;">CF API TARGET IP</label> 
                         <div style=" width: 60%;">
                             <input name="publicStaticIp" type="text" style="display:inline-blcok; width:70%;" placeholder="예) 10.0.0.20"/>
                         </div>
@@ -1939,14 +1939,29 @@
             <div class="panel panel-info" id="defaultNetworkInfoDiv_1">
                 <div  class="panel-heading" style="position:relative;">
                     <b>Internal 네트워크</b>
-                    <div style="position: absolute;right: 10px ;top: 2px; ">
+                    <div style="position: absolute;right: 0;top: 5px;">
                         <a class="btn btn-info btn-sm addInternal" onclick="addInternalNetworkInputs('#defaultNetworkInfoDiv_1', '#defaultNetworkInfoForm');">추가</a>
                     </div>
                 </div>
                 <div class="panel-body">
-
-
-
+                    <div class="w2ui-field">
+                        <label style="text-align: left;width:36%;font-size:11px;">서브넷 아이디</label>
+                        <div style=" width: 60%;">
+                            <input name="subnetId_1" type="text"  style="display:inline-blcok; width:70%;" placeholder="서브넷 아이디를 입력하세요."/>
+                        </div>
+                    </div>
+                    <div class="w2ui-field">
+                        <label style="text-align: left;width:36%;font-size:11px;">보안 그룹</label>
+                        <div style=" width: 60%;">
+                            <input name="cloudSecurityGroups_1" type="text"  style="display:inline-blcok; width:70%;" placeholder="예) bosh-security, cf-security"/>
+                        </div>
+                    </div>
+                    <div class="w2ui-field" hidden="true" id="availabilityZoneDiv">
+                        <label style="text-align: left;width:36%;font-size:11px;">가용 영역</label>
+                        <div style=" width: 60%;">
+                            <input name="availabilityZone_1" type="text"  style="display:inline-blcok; width:70%;" placeholder="예) us-west-2"/>
+                        </div>
+                    </div>
                     <div class="w2ui-field">
                         <label style="text-align: left;width:36%;font-size:11px;">서브넷 범위</label>
                         <div style=" width: 60%;">
@@ -1968,17 +1983,17 @@
                     <div class="w2ui-field">
                         <label style="text-align: left; width: 36%; font-size: 11px;">IP할당 제외 대역</label>
                         <div style=" width: 60%;">
-                            <input name="subnetReservedFrom_1" id="subnetReservedFrom_1" type="text" style="display:inline-block; width:32%;" placeholder="예) 10.0.0.100" />
+                            <input name="subnetReservedFrom_1" type="text" style="display:inline-block; width:32%;" placeholder="예) 10.0.0.100" />
                             <span style="width: 4%; text-align: center;">&nbsp;&ndash; &nbsp;</span>
-                            <input name="subnetReservedTo_1" id="subnetReservedTo_1" type="text" style="display:inline-block; width:32%;" placeholder="예) 10.0.0.106" />
+                            <input name="subnetReservedTo_1"  type="text" style="display:inline-block; width:32%;" placeholder="예) 10.0.0.106" />
                         </div>
                     </div>
                     <div class="w2ui-field">
                         <label style="text-align: left; width: 36%; font-size: 11px;">IP할당 대역(최소 20개)</label>
                         <div style=" width: 60%;">
-                            <input name="subnetStaticFrom_1" id="subnetStaticFrom_1" type="text" style="display:inline-block; width:32%;" placeholder="예) 10.0.0.100" />
+                            <input name="subnetStaticFrom_1"  type="text" style="display:inline-block; width:32%;" placeholder="예) 10.0.0.100" />
                             <span style="width: 4%; text-align: center;">&nbsp;&ndash; &nbsp;</span>
-                            <input name="subnetStaticTo_1" id="subnetStaticTo_1" type="text" style="display:iinline-block; width:32%;" placeholder="예) 10.0.0.106" />
+                            <input name="subnetStaticTo_1" type="text" style="display:iinline-block; width:32%;" placeholder="예) 10.0.0.106" />
                         </div>
                     </div>
                 </div>
