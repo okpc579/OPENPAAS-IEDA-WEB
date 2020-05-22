@@ -127,7 +127,7 @@ $(function() {
             }, credentialKeyName: { 
                 required:  "디렉터 인증서"+select_required_msg
             }, ntp: { 
-                required:  "npt"+text_required_msg
+                required:  "NTP"+text_required_msg
             }, boshRelease: { 
                 required:  "BOSH 릴리즈" + select_required_msg
             }, boshCpiRelease: { 
