@@ -195,17 +195,29 @@ function saveConfirm() {
 }
 
 function saved() {
-     w2confirm({
+    <%-- w2confirm({--%>
+    <%--    title     : "패스워드 저장완료",--%>
+    <%--    msg        : "저장 되었습니다",--%>
+    <%--    yes_text    : "확인",--%>
+    <%--    yes_callBack: function(event){--%>
+    <%--        // 메인화면을 표시한다.--%>
+    <%--        var page = "<c:url value="/" />";            --%>
+    <%--        window.location.href = page;--%>
+    <%--    }                --%>
+    <%--}); --%>
+    w2popup.open({
+        width     : 450,
+        height    : 220,
+        showMax   : false,
+        showClose : false,
         title     : "패스워드 저장완료",
-        msg        : "저장 되었습니다",
-        yes_text    : "확인",
-        no_text        : "닫기",
-        yes_callBack: function(event){
-            // 메인화면을 표시한다.
-            var page = "<c:url value="/" />";            
+        body      : '<div class="w2ui-centered" style="font-size: 13px;">' + "저장 되었습니다" + '</div>',
+        buttons   : '<button onclick="w2popup.close();" class="w2ui-popup-btn btn">' + w2utils.lang('확인') + '</button>',
+        onClose   : function () {
+            var page = "<c:url value="/" />";
             window.location.href = page;
-        }                
-    }); 
+        }
+    });
 }
 </script>
 </head>
@@ -215,13 +227,13 @@ function saved() {
             <p style=""> 비밀번호 변경 </p>
             <div class="box-inner">
                 <ul>
-                    <li>                            
+                    <li>
                         <ul>
                             <li class="labels">
                                 <label for="">Password: </label>
                             </li>
                             <li>
-                                <input name="password" id="password" type="password" class="input-box login-box" maxlength="50" autocomplete="off" value="" placeholder="">    
+                                <input name="password" id="password" type="password" class="input-box login-box" maxlength="50" autocomplete="off" value="" placeholder="">
                             </li>
                         </ul>
                     </li>
@@ -231,18 +243,18 @@ function saved() {
                                 <label for="">Confirm Password: </label>
                             </li>
                             <li>
-                                <input name="password" id="password2" type="password" class="input-box password" maxlength="20" autocomplete="off" placeholder="">                        
+                                <input name="password" id="password2" type="password" class="input-box password" maxlength="20" autocomplete="off" placeholder="">
                             </li>
                         </ul>
                     </li>
-                    
+
                     <li class="mesg-alert">
                         <p><span id="errMsg"></span></p>
-                    </li>            
-                    <li style="text-align:center">
-                        <a href="#" onclick="javascript:saveConfirm(); return false;"><span class="submit-btn">확인</span></a>                                            
                     </li>
-                </ul>        
+                    <li style="text-align:center">
+                        <a href="#" onclick="javascript:saveConfirm(); return false;"><span class="submit-btn">확인</span></a>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>

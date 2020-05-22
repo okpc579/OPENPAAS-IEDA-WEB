@@ -411,9 +411,12 @@ function defaultInfoPop(iaas){
         buttons : $("#DefaultInfoButtonDiv").html(),
         onOpen:function(event){
             event.onComplete = function(){
-                if( iaas != 'warden' ){
+                if( iaas.toUpperCase() != "WARDEN" ){
                     $(".w2ui-msg-body .gardenRuncDiv").hide();
                     $(".w2ui-msg-body .boshVirtualBoxCpiDiv").hide();
+                }else if( iaas.toUpperCase() == "WARDEN" ){
+                    $(".w2ui-msg-body .gardenRuncDiv").show();
+                    $(".w2ui-msg-body .boshVirtualBoxCpiDiv").show();
                 }
                 $(".w2ui-msg-body input[name='paastaMonitoring']").attr("checked", false);
                 $(".w2ui-msg-body select[name=paastaMonitoringAgentRelease]").attr("disabled", true);

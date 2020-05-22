@@ -575,7 +575,12 @@
         else if(iaas.toLowerCase() == "vsphere"){
             html+= field_div_label + "포트 그룹명" + "</label>";
             html+= "<div style=' width: 60%;'>"+"<input name='subnetId_"+index+"'" + text_style +" placeholder='포트 그룹명을 입력하세요.'/>"+"</div></div>";
-        }else{
+        }
+        else if(iaas.toLowerCase() == "warden"){
+
+        }
+        else{
+
             html+= field_div_label + "서브넷 아이디" + "</label>";
             html+="<div style=' width: 60%;'>"+"<input name='subnetId_"+index+"'" + text_style +" placeholder='서브넷 아이디를 입력하세요.'/>"+"</div></div>";
 
@@ -636,11 +641,13 @@
         }else if(  iaas.toLowerCase() == "vsphere"){
             subnet_message="포트 그룹명";
         }
-        $("[name*='subnetId_"+index+"']").rules("add", {
-            required: function(){
-                return checkEmpty($(".w2ui-msg-body input[name='subnetId_"+index+"']").val());
-            }, messages: {required: subnet_message+text_required_msg}
-        });
+        if(iaas.toLowerCase() != "warden"){
+            $("[name*='subnetId_"+index+"']").rules("add", {
+                required: function(){
+                    return checkEmpty($(".w2ui-msg-body input[name='subnetId_"+index+"']").val());
+                }, messages: {required: subnet_message+text_required_msg}
+            });
+        }
         $("[name*='subnetRange_"+index+"']").rules("add", {
             required: function(){
                 return checkEmpty($(".w2ui-msg-body input[name='subnetRange_"+index+"']").val());
@@ -648,7 +655,6 @@
                 return $(".w2ui-msg-body input[name='subnetRange_"+index+"']").val();
             }, messages: {required: "서브넷 범위"+text_required_msg}
         });
-
         $("[name*='subnetGateway_"+index+"']").rules("add", {
             required: function(){
                 return checkEmpty($(".w2ui-msg-body input[name='subnetGateway_"+index+"']").val());
@@ -656,7 +662,6 @@
                 return $(".w2ui-msg-body input[name='subnetGateway_"+index+"']").val();
             }, messages: {required: "게이트웨이"+text_required_msg}
         });
-
         $("[name*='subnetDns_"+index+"']").rules("add", {
             required: function(){
                 return checkEmpty($(".w2ui-msg-body input[name='subnetDns_"+index+"']").val());
@@ -675,7 +680,6 @@
                 }
             }, messages: {required: "DNS"+text_required_msg}
         });
-
         $("[name*='subnetReservedFrom_"+index+"']").rules("add", {
             required: function(){
                 return checkEmpty($(".w2ui-msg-body input[name='subnetReservedFrom_"+index+"']").val());
@@ -707,8 +711,7 @@
                 return $(".w2ui-msg-body input[name='subnetStaticTo_"+index+"']").val();
             }, messages: {required: "IP 할당 대역"+text_required_msg}
         });
-
-        if( iaas.toLowerCase() != "vsphere" ){
+        if( iaas.toLowerCase() != "vsphere" && iaas.toLowerCase() != "warden"){
             $("[name*='cloudSecurityGroups_"+index+"']").rules("add", {
                 required: function(){
                     return checkEmpty($(".w2ui-msg-body input[name='cloudSecurityGroups_"+index+"']").val());
@@ -1237,7 +1240,6 @@
         });
         if( flag ){
             if(type == 'after'){
-                console.log("4444");
                 $.ajax({
                     type : "PUT",
                     url : "/deploy/"+menu+"/install/save/jobsInfo",
@@ -2131,7 +2133,7 @@
                     <div class="w2ui-field">
                         <label style="text-align: left;width:36%;font-size:11px;">서브넷 범위</label>
                         <div style=" width: 60%;">
-                            <input name="subnetRange_1" type="text"  style="display:inline-blcok; width:70%;" placeholder="예) 10.0.0.0/24-warden"/>
+                            <input name="subnetRange_1" type="text"  style="display:inline-blcok; width:70%;" placeholder="예) 10.0.0.0/24"/>
                         </div>
                     </div>
                     <div class="w2ui-field">
@@ -2437,7 +2439,7 @@
                     <div class="w2ui-field">
                         <label style="text-align: left; width: 40%; font-size: 11px;">Email</label>
                         <div style=" width: 60%;">
-                            <input name="email" type="text" id="email" style="float: left; width: 75%;"  placeholder="Email을 입력하세요." />
+                            <input name="email" type="text" id="email" style="display:inline-block; width: 75%;"  placeholder="Email을 입력하세요." />
                         </div>
                     </div>
                 </div>
