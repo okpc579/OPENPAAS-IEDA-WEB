@@ -197,7 +197,7 @@ BOOTSTRAP을 설치하기 위해서는 BOSH 릴리즈와 BOSH CPI릴리즈 2개�
     <td>참조 사이트</td>
   </tr>
   <tr>
-    <td>Azure</td>
+    <td>Warden</td>
     <td>https://bosh.io/releases/github.com/cppforlife/bosh-warden-cpi-release?all=1</td>
   </tr>
 </table>
