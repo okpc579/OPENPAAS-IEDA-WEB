@@ -2445,9 +2445,9 @@ function popupClose() {
                         </div>
                     </div>
                     <div class="w2ui-field">
-                        <label class="subnetId" style="text-align: left;width:36%;font-size:11px;">outbound_network_name 명</label>
+                        <label class="subnetId" style="text-align: left;width:36%;font-size:11px;">아웃바운드 네트워크 명</label>
                         <div style="width: 60%">
-                            <input name="subnetId" type="text"  style="display:inline-block;width:70%;" placeholder="outbound_network_name 명을 입력하세요."/>
+                            <input name="subnetId" type="text"  style="display:inline-block;width:70%;" placeholder="아웃바운드 네트워크 명을 입력하세요."/>
                         </div>
                     </div>
                     <div class="w2ui-field">

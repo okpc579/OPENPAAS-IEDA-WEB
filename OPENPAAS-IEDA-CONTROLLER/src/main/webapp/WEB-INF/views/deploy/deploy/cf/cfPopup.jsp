@@ -1829,7 +1829,7 @@
                     <div class="w2ui-field" id="cfAdminPasswordConfDiv">
                         <label style="text-align: left; width: 36%; font-size: 11px;">CF Admin Password</label>
                         <div style=" width: 60%;">
-                            <input name="cfAdminPassword" type="text" style="display:inline-block;width:80%;" placeholder="cf admin password를 입력하세요" />
+                            <input name="cfAdminPassword" type="text" style="display:inline-block;width:80%;" placeholder="CF Admin Password를 입력하세요" />
                         </div>
                     </div>
                     <div class="w2ui-field">
