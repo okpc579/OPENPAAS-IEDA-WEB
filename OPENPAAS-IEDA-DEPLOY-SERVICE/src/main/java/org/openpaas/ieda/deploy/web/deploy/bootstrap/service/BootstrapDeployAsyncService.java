@@ -102,11 +102,7 @@ public class BootstrapDeployAsyncService {
                 cmd.add("create-env");
                 cmd.add(deployFile);
                 cmd.add("--state="+ DEPLOYMENT_DIR + bootstrapInfo.getDeploymentFile().replace(".yml","")+"-state.json");
-                if("warden".equalsIgnoreCase(dto.getIaasType())){
-                    cmd.add("--vars-store="+CREDENTIAL_DIR+ "warden-creds.yml");
-                }else{
-                    cmd.add("--vars-store="+CREDENTIAL_DIR+ bootstrapInfo.getCredentialKeyName());
-                }
+                cmd.add("--vars-store="+CREDENTIAL_DIR+ bootstrapInfo.getCredentialKeyName());
                 settingBoshInfo(cmd, bootstrapInfo);
                 settingIaasCpiInfo(cmd, bootstrapInfo, result);
                 //settingUaaInfo(cmd, bootstrapInfo, result);
