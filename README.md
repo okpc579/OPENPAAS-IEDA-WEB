@@ -15,17 +15,16 @@
 
    * [BOOTSTRAP 설치하기](#8)
 
-     * [인프라 환경 설정 관리](#9)
-     * [스템셀 다운로드](#10)
-     * [릴리즈 다운로드](#11)
-     * [디렉터 인증서 생성](#12)
-     * [BOOTSTRAP 설치](#13)
+     * [스템셀 다운로드](#9)
+     * [릴리즈 다운로드](#10)
+     * [디렉터 인증서 생성](#11)
+     * [BOOTSTRAP 설치](#12)
 
-   * [CF-Deployment 설치하기](#14)
+   * [CF-Deployment 설치하기](#13)
 
-     * [스템셀 업로드](#15)
-     * [PaaS-TA 릴리즈 사용](#16)
-     * [CF-Deployment 설치](#17)
+     * [스템셀 업로드](#14)
+     * [PaaS-TA 릴리즈 사용](#15)
+     * [CF-Deployment 설치](#16)
 
      
 
@@ -143,11 +142,11 @@ BOSH는 클라우드 환경에 서비스를 배포하고 소프트웨어 릴리�
 
 
 
-## <div id='9'/>2.4  BOOTSTRAP 설치하기
+## <div id='8'/>2.4  BOOTSTRAP 설치하기
 
 플랫폼 설치 자동화를 이용하여 BOOTSTRAP을 설치하고, 디렉터로 등록하는 절차는 다음과 같다.
 
-### <div id='10'/>2.4.1 *스템셀 다운로드*
+### <div id='9'/>2.4.1 *스템셀 다운로드*
 
 플랫폼 설치 자동화 웹 화면에서 “환경설정 및 관리” -> “스템셀 관리” 메뉴로 이동한다. “스템셀 관리” 메뉴에서는 Cloud Foundry에서 제공하는 공개 스템셀을 다운로드할 수 있는 기능을 제공한다.
 스템셀 다운로드 유형은 총 3가지이며 Version유형으로 다운로드가 안될 경우 로컬에서 다운로드 후 로컬에서 선택 유형/스템셀 다운로드 URL을 통해 다운로드 받는 유형을 이용한다.
@@ -168,7 +167,7 @@ BOSH는 클라우드 환경에 서비스를 배포하고 소프트웨어 릴리�
   - OS 버전: OS의 버전 선택
   - 스템셀 다운 유형: 다운로드 유형 선택
 
-### <div id='11'/>2.4.2 *릴리즈 다운로드*
+### <div id='10'/>2.4.2 *릴리즈 다운로드*
 
 BOOTSTRAP을 설치하기 위해서는 BOSH 릴리즈와 BOSH CPI릴리즈 2개의 릴리즈가 필요하며, BOSH 릴리즈 버전 266 이상일 경우 BPM 릴리즈가 더 추가되어 총 3개의 릴리즈가 필요하다.
 릴리즈 다운로드 유형은 총 3가지이며 Version유형으로 다운로드가 안될 경우 로컬에서 다운로드 후 로컬에서 선택 유형/릴리즈 다운로드 URL을 통해 다운로드 받는 유형을 이용한다.
@@ -232,7 +231,7 @@ BOOTSTRAP을 설치하기 위해서는 BOSH 릴리즈와 BOSH CPI릴리즈 2개�
 
 **본 가이드에서는 v21.0.0을 다운로드 하였다.**
 
-### <div id='13'/>2.4.3 *디렉터 인증서 생성*
+### <div id='11'/>2.4.3 *디렉터 인증서 생성*
 
 BOOTSTRAP을 설치하기 위해서는 Nats/Director 컴포넌트를 사용하기 위한 인증서 정보, 디렉터 인증서가 필요하며 디렉터 인증서를 생성하기 위해 플랫폼 설치 자동화 웹 화면에서 “환경설정 및 관리” -> “디렉터 인증서 관리” 메뉴로 이동 후 상단에 위치한 “등록” 버튼을 클릭하고, 디렉터 인증서 팝업 화면에서 디렉터 인증서 정보 입력 후 “등록” 버튼을 클릭한다.
 
@@ -248,7 +247,7 @@ BOOTSTRAP을 설치하기 위해서는 Nats/Director 컴포넌트를 사용하�
 
     
 
-### <div id='14'/>2.4.4 *BOOTSTRAP 설치*
+### <div id='12'/>2.4.4 *BOOTSTRAP 설치*
 
 BOOTSTRAP 설치하기 위해 플랫폼 설치 자동화 웹 화면에서 “플랫폼 설치” -> “BOOTSTRAP 설치” 메뉴로 이동 후 상단에 위치한 “설치” 버튼을 클릭한다.
 
@@ -315,7 +314,7 @@ BOOTSTRAP 설치하기 위해 플랫폼 설치 자동화 웹 화면에서 “플
 
 ![](https://github.com/okpc579/OPENPAAS-IEDA-WEB/blob/bosh/use-guide/platform/images/install-guide/warden/bootstrap/bootstrap%ED%8C%9D%EC%97%85%EC%B0%BD(%EC%84%A4%EC%B9%98).png?raw=true)
 
-### <div id='15'/>2.4.5 *디렉터 설정*
+### <div id='13'/>2.4.5 *디렉터 설정*
 
 BOOTSTRAP설치가 완료되면 BOOTSTRAP 디렉터 정보를 이용해서 플랫폼 설치 자동화의 디렉터로 설정한다.
 디렉터를 등록 위해서는 플랫폼 설치 자동화 웹 화면에서 “환경설정 및 관리” -> “디렉터 설정” 메뉴로 이동 후 상단에 위치한 “등록” 버튼을 클릭하고, 디렉터 등록 팝업 화면에서 디렉터 정보 입력 후 “등록” 버튼을 클릭한다.
@@ -332,7 +331,7 @@ BOOTSTRAP설치가 완료되면 BOOTSTRAP 디렉터 정보를 이용해서 플�
   - 계정: BOOTSTRAP 설치 Manifest의 user_management 아래 Director User 입력
   - 비밀번호: BOOTSTRAP 설치 Manifest의 user_management아래 Director Password 입력
 
-## <div id='16'/>2.5 *CF-Deployment 설치하기*
+## <div id='14'/>2.5 *CF-Deployment 설치하기*
 
 BOSH를 설치하고 플랫폼 설치 자동화의 디렉터로 설정이 완료되면 CF-Deployment를 설치할 준비가 된 상태로 PaaS-TA를 설치하는 절차는 다음과 같다.
 
@@ -340,7 +339,7 @@ BOSH를 설치하고 플랫폼 설치 자동화의 디렉터로 설정이 완료
 
 ![](https://github.com/okpc579/OPENPAAS-IEDA-WEB/blob/bosh/use-guide/platform/images/install-guide/warden/cf/cf_flow.png?raw=true)
 
-### <div id='17'/>2.5.1 *스템셀 업로드*
+### <div id='15'/>2.5.1 *스템셀 업로드*
 
 플랫폼 설치 자동화에서 다운받은 스템셀을 “스템셀 업로드” 화면을 통해 디렉터에 315.64 버전의 스템셀을 업로드 한다. (먼저 스템셀 관리에서 bosh-warden-boshlite-ubuntu-xenial-go_agent 315.64를 다운로드 한다.)
 
@@ -372,7 +371,7 @@ BOSH를 설치하고 플랫폼 설치 자동화의 디렉터로 설정이 완료
 
 ![](https://github.com/okpc579/OPENPAAS-IEDA-WEB/blob/bosh/use-guide/platform/images/install-guide/warden/cf/6_%EB%A6%B4%EB%A6%AC%EC%A6%88%EC%97%85%EB%A1%9C%EB%93%9C.jpg?raw=true)
 
-### <div id='18'/>2.5.3 *CF-Deployment 설치*
+### <div id='16'/>2.5.3 *CF-Deployment 설치*
 
 CF-Deployment를 설치하기 위해 플랫폼 설치 자동화 웹 화면에서 “플랫폼 설치” -> “CF-Deployment설치” 메뉴로 이동 후 상단의 “설치” 버튼을 클릭한다.
 
