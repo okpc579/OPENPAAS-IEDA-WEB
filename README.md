@@ -98,42 +98,6 @@ BOSH는 클라우드 환경에 서비스를 배포하고 소프트웨어 릴리�
         <td>BOSH 릴리즈</td>
         <td>CPI 릴리즈</td>
     </tr>
-    <tr>
-        <td>cf-deployment/2.7.0</td>
-        <td>bosh-warden-boshlite-ubuntu-xenial-go_agent/3586.25</td>
-    </tr>
-    <tr>
-        <td>cf-deployment/3.2.0</td>
-        <td>bosh-warden-boshlite-ubuntu-xenial-go_agent/3586.27</td>
-    </tr>
-    <tr>
-        <td>cf-deployment/4.0.0</td>
-        <td>bosh-warden-boshlite-ubuntu-xenial-go_agent/3586.40</td>
-    </tr>
-    <tr>
-        <td>cf-deployment/5.0.0</td>
-        <td>bosh-warden-boshlite-ubuntu-xenial-go_agent/97.18</td>
-    </tr>
-    <tr>
-        <td>cf-deployment/5.5.0</td>
-        <td>bosh-warden-boshlite-ubuntu-xenial-go_agent/97.28</td>
-    </tr>
-		<tr>
-        <td>cf-deployment/9.3.0</td>
-        <td>bosh-warden-boshlite-ubuntu-xenial-go_agent/315.36</td>
-    </tr>
-		<tr>
-        <td>cf-deployment/9.5.0</td>
-        <td>bosh-warden-boshlite-ubuntu-xenial-go_agent/315.64</td>
-    </tr>
-		<tr>
-        <td>paasta/4.0</td>
-        <td>bosh-warden-boshlite-ubuntu-xenial-go_agent/97.28</td>
-    </tr>
-		<tr>
-        <td>paasta/4.6</td>
-        <td>bosh-warden-boshlite-ubuntu-xenial-go_agent/315.36</td>
-    </tr>
 		<tr>
         <td>paasta/5.0</td>
         <td>bosh-warden-boshlite-ubuntu-xenial-go_agent/315.64</td>
