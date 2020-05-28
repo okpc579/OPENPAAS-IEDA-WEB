@@ -226,7 +226,7 @@ BOOTSTRAP 설치하기 위해 플랫폼 설치 자동화 웹 화면에서 “플
 
 1.	아래의 기본 정보 입력 후 “다음” 버튼을 클릭한다.
 
-![](https://github.com/okpc579/OPENPAAS-IEDA-WEB/blob/bosh/use-guide/platform/images/install-guide/warden/bootstrap/bootstrap%ED%8C%9D%EC%97%85%EC%B0%BD(%EA%B8%B0%EB%B3%B8%EC%A0%95%EB%B3%B4).png?raw=true)
+![](https://github.com/okpc579/OPENPAAS-IEDA-WEB/blob/bosh/use-guide/platform/images/install-guide/warden/bootstrap/bootstrap%ED%8C%9D%EC%97%85%EC%B0%BD(%EA%B8%B0%EB%B3%B8%EC%A0%95%EB%B3%B4%EB%82%B4%EC%97%AD).png?raw=true)
 
 ※	BOOTSTRAP 기본 정보 입력 정보
 
