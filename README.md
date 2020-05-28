@@ -98,42 +98,6 @@ BOSH는 클라우드 환경에 서비스를 배포하고 소프트웨어 릴리�
         <td>BOSH 릴리즈</td>
         <td>CPI 릴리즈</td>
     </tr>
-    <tr>
-        <td>cf-deployment/2.7.0</td>
-        <td>bosh-warden-boshlite-ubuntu-xenial-go_agent/3586.25</td>
-    </tr>
-    <tr>
-        <td>cf-deployment/3.2.0</td>
-        <td>bosh-warden-boshlite-ubuntu-xenial-go_agent/3586.27</td>
-    </tr>
-    <tr>
-        <td>cf-deployment/4.0.0</td>
-        <td>bosh-warden-boshlite-ubuntu-xenial-go_agent/3586.40</td>
-    </tr>
-    <tr>
-        <td>cf-deployment/5.0.0</td>
-        <td>bosh-warden-boshlite-ubuntu-xenial-go_agent/97.18</td>
-    </tr>
-    <tr>
-        <td>cf-deployment/5.5.0</td>
-        <td>bosh-warden-boshlite-ubuntu-xenial-go_agent/97.28</td>
-    </tr>
-		<tr>
-        <td>cf-deployment/9.3.0</td>
-        <td>bosh-warden-boshlite-ubuntu-xenial-go_agent/315.36</td>
-    </tr>
-		<tr>
-        <td>cf-deployment/9.5.0</td>
-        <td>bosh-warden-boshlite-ubuntu-xenial-go_agent/315.64</td>
-    </tr>
-		<tr>
-        <td>paasta/4.0</td>
-        <td>bosh-warden-boshlite-ubuntu-xenial-go_agent/97.28</td>
-    </tr>
-		<tr>
-        <td>paasta/4.6</td>
-        <td>bosh-warden-boshlite-ubuntu-xenial-go_agent/315.36</td>
-    </tr>
 		<tr>
         <td>paasta/5.0</td>
         <td>bosh-warden-boshlite-ubuntu-xenial-go_agent/315.64</td>
@@ -262,7 +226,7 @@ BOOTSTRAP 설치하기 위해 플랫폼 설치 자동화 웹 화면에서 “플
 
 1.	아래의 기본 정보 입력 후 “다음” 버튼을 클릭한다.
 
-![](https://github.com/okpc579/OPENPAAS-IEDA-WEB/blob/bosh/use-guide/platform/images/install-guide/warden/bootstrap/bootstrap%ED%8C%9D%EC%97%85%EC%B0%BD(%EA%B8%B0%EB%B3%B8%EC%A0%95%EB%B3%B4).png?raw=true)
+![](https://github.com/okpc579/OPENPAAS-IEDA-WEB/blob/bosh/use-guide/platform/images/install-guide/warden/bootstrap/bootstrap%ED%8C%9D%EC%97%85%EC%B0%BD(%EA%B8%B0%EB%B3%B8%EC%A0%95%EB%B3%B4%EB%82%B4%EC%97%AD).png?raw=true)
 
 ※	BOOTSTRAP 기본 정보 입력 정보
 
