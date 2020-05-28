@@ -255,7 +255,7 @@ function azurePopup(){
  ***************************************************************** */
 function wardenPopup(){
     $("#DefaultInfoPrev").hide();
-    $("#credentialKeyName").hide();
+    //$("#credentialKeyName").hide();
     $("input[name=iaasType]").val("Warden");
     defaultInfoPop('warden');
 }
